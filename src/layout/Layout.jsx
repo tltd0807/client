@@ -2,6 +2,7 @@ import React from "react";
 import "../index.css";
 import { Input, Layout, Avatar, theme, Space, Button  } from "antd";
 import { SearchOutlined,ShoppingCartOutlined  } from '@ant-design/icons';
+const { Search } = Input;
 const { Header, Content, Footer } = Layout;
 ;
 const LayoutComponent = (props) => {
@@ -14,9 +15,12 @@ const LayoutComponent = (props) => {
 
       <Space direction="horizontal" size={1100} >
 
-      <Space direction="horizontal">
-        <span className="text-white font-bold text-lg w-[120px] h-8 inline-block px-[20px]">HOPE</span>
-          <Input className="w-[350px]"prefix={<SearchOutlined />} placeholder="Tìm đôi giày bạn thích"/>
+      <Space direction="horizontal" className="flex items-center">
+        <span className="text-white font-bold text-lg w-[120px] h-8 inline-block px-[20px] cursor-pointer hover:text-[#48cae4]">HOPE</span>
+          <Search placeholder="Tìm đôi giày bạn thích" onSearch={(val)=>console.log(val)} enterButton={<SearchOutlined />}  style={{
+        width: 350,
+        marginTop:"15px",
+      }}/>
         </Space>
       <Space direction="horizontal" size={20}>
    
