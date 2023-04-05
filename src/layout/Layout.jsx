@@ -2,6 +2,7 @@ import React from "react";
 import "../index.css";
 import { Input, Layout, Avatar, theme, Space, Button  } from "antd";
 import { SearchOutlined,ShoppingCartOutlined  } from '@ant-design/icons';
+import { Link } from "react-router-dom";
 const { Search } = Input;
 const { Header, Content, Footer } = Layout;
 ;
@@ -16,7 +17,8 @@ const LayoutComponent = (props) => {
       <Space direction="horizontal" size={1100} >
 
       <Space direction="horizontal" className="flex items-center">
-        <span className="text-white font-bold text-lg w-[120px] h-8 inline-block px-[20px] cursor-pointer hover:text-[#48cae4]">HOPE</span>
+        <Link to={'/'}>
+        <span className="text-white font-bold text-lg w-[120px] h-8 inline-block px-[20px] cursor-pointer hover:text-[#48cae4]">HOPE</span></Link>
           <Search placeholder="Tìm đôi giày bạn thích" onSearch={(val)=>console.log(val)} enterButton={<SearchOutlined />}  style={{
         width: 350,
         marginTop:"15px",
@@ -26,7 +28,7 @@ const LayoutComponent = (props) => {
    
         <Avatar src={<img src={'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSLHXF3HZljLg54wXrrfY0Rx3fi5hvDYs4lwFwvXtQQ&s'} alt="avatar" />} />
         <ShoppingCartOutlined style={{fontSize: '25px', color:'white'}}  />
-        <Button type="primary">Đăng ký</Button>
+        <Link type="primary" to={'/signup'} className="text-white text-[16px]">Đăng ký</Link>
         </Space>
      </Space>
 

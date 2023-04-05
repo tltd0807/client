@@ -65,7 +65,7 @@ const Login = () => {
 
       <Form.Item>
         <Button type="primary" htmlType="submit" className="text-[#48cae4] border border-[#48cae4]">
-          Log in
+          Đăng nhập
         </Button>
         Chưa có tài khoản? <Link to={'/signup'}><span className='text-[#1677ff] hover:text-[#1677ffde]'> Đăng ký ngay</span></Link>
       </Form.Item>

@@ -5,6 +5,8 @@ import Login from "./pages/Login";
 import Account from "./pages/User/Account";
 import LandingPage from "./pages/LandingPage";
 import SignUpPage from "./pages/SignUpPage";
+import ForgotPage from "./pages/ForgotPage";
+import ResetPage from "./pages/ResetPage";
 
 import "./App.css";
 
@@ -18,6 +20,8 @@ function App() {
         <Route path="/admin" element={<AdminHome />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUpPage />} />
+        <Route path="/forgotPassword" element={<ForgotPage />} />
+        <Route path="/resetPassword/:token" element={<ResetPage />} />
       </Routes>
     </div>
   );
