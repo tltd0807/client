@@ -1,11 +1,42 @@
-import React from 'react'
-import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { Button, Form, Input } from 'antd';
-import { Link } from 'react-router-dom';
-
+import React, { useState } from 'react'
+import { LockOutlined } from '@ant-design/icons';
+import { Button, Form, Input, Modal } from 'antd';
+import { useNavigate, useParams } from 'react-router-dom';
+import { resetPassword } from '../api/authAPI';
+const success = (mes) => {
+  Modal.success({
+    title:'SUCCESS',
+    content: mes,
+    closable:true,
+  });
+};
+const error = (mes) => {
+  Modal.error({
+    title: "ERROR",
+    content: mes,
+    closable:true,
+  });
+};
 const ResetPage = () => {
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const {resetToken} = useParams();
     const onFinish = (values) => {
-        console.log('Received values of form: ', values);
+      setLoading(true)
+        resetPassword(resetToken,values).then(res=>{
+          setLoading(false);
+          success("Đổi thành công")
+          setTimeout(()=>{
+            Modal.destroyAll();
+         
+              navigate("/login");
+              
+            
+          },2000)
+        }).catch((err)=>{
+          setLoading(false);
+          error( err.response.data.message)
+        })
         //values: {email: 'test@gmail.com', password: '5khkryrkr'}
       };
       return (
@@ -18,6 +49,7 @@ const ResetPage = () => {
             remember: false,
           }}
           onFinish={onFinish}
+          disabled={loading}
         >
          
           <Form.Item

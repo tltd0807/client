@@ -36,8 +36,14 @@ const Login = () => {
       success("Đăng nhập thành công")
       setTimeout(()=>{
         Modal.destroyAll();
-        navigate("/");
-      },500)
+        if(res.data.user.role==='admin'){
+
+          navigate("/admin");
+        }else{
+          navigate("/");
+          
+        }
+      },2000)
 
       
     })
@@ -97,8 +103,9 @@ const Login = () => {
       </Form.Item>
       <Form.Item>
 
-        <Link className="login-form-forgot" to={'/'}>
-          Forgot password
+        <Link className="login-form-forgot" to={'/forgotPassword'}>
+        <span className='text-[#1677ff] hover:text-[#1677ffde]'>
+          Forgot password</span>
         </Link>
       </Form.Item>
 

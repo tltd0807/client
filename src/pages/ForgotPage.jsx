@@ -1,11 +1,38 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {  UserOutlined } from '@ant-design/icons';
-import { Button, Form, Input } from 'antd';
-
+import { Button, Form, Input, Modal } from 'antd';
+import { useNavigate } from 'react-router-dom';
+import { forgotPassword } from '../api/authAPI';
+const success = (mes) => {
+  Modal.success({
+    title:'SUCCESS',
+    content: mes,
+    closable:true,
+  });
+};
+const error = (mes) => {
+  Modal.error({
+    title: "ERROR",
+    content: mes,
+    closable:true,
+  });
+};
 const ForgotPage = () => {
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+
     const onFinish = (values) => {
-        console.log('Received values of form: ', values);
+      setLoading(true)
         //values: {email: 'test@gmail.com'}
+        forgotPassword(values).then((res)=>{
+          setLoading(false)
+          success("Đã gửi mail đường dẫn đổi mật khẩu")
+          // socket?
+          setTimeout(()=>{ navigate("/login"); },500)
+        }).catch((err) => {
+          setLoading(false);
+          error( err.response.data.message)
+        });
       };
   return (
     <main className='w-screen h-screen flex justify-center items-center'>
@@ -17,6 +44,7 @@ const ForgotPage = () => {
       remember: false,
     }}
     onFinish={onFinish}
+    disabled={loading}
   >
     <Form.Item
       name="email"

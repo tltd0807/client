@@ -18,3 +18,19 @@ export const isLoggedIn = async (token) => {
   });
   return res.data;
 };
+
+export const forgotPassword = async (data) => {
+  const res = await axios.post(
+    `${APP_BASE_URL}/api/v1/users/forgot-password`,
+    data
+  );
+  return res.data;
+};
+
+export const resetPassword = async (resetToken, data) => {
+  const res = await axios.patch(
+    `${APP_BASE_URL}/api/v1/users/reset-password/${resetToken}`,
+    data
+  );
+  return res.data;
+};
