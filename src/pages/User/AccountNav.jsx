@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { Avatar } from 'antd'
 import { InfoCircleOutlined,UnorderedListOutlined,HomeOutlined } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom'
@@ -6,18 +6,19 @@ import AuthContext from '../../store/authCtx';
 const AccountNav = (props) => {
     const authCtx=useContext( AuthContext);
     const navigate= useNavigate()
-    const {firstName, lastName, avatarUrl}=authCtx
+    const {firstName, lastName, photo}=props.userInfo
 const logout=()=>{
   authCtx.logout();
     navigate('/')
-  
 }
+
+
   return (
     <nav className='flex flex-col bg-slate-100 p-5 text-left space-y-3'>
         <div className='text-center'>
         <Avatar
     size={{ xs: 24, sm: 32, md: 40, lg: 64, xl: 80, xxl: 100 }}
-    src={avatarUrl}
+    src={photo}
   />
         </div>
         <div >

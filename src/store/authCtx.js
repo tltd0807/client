@@ -4,17 +4,22 @@ import { logoutUser } from "../api/authAPI";
 const AuthContext = React.createContext({
   isLoggedIn: false,
   logout: () => {},
-  userFirstName: "",
+  login: () => {},
+  firstName: "",
+  lastName: "",
   photo: "",
   role: "",
+  email: "",
 });
 export const AuthContextProvider = (props) => {
   const initToken = localStorage.getItem("token");
+  const initEmail = localStorage.getItem("email");
   const initFirstName = localStorage.getItem("firstName");
   const initAvatarUrl = localStorage.getItem("avatarUrl");
   const initLastName = localStorage.getItem("lastName");
   const initRole = localStorage.getItem("role");
   const [token, setToken] = useState(initToken);
+  const [email, setEmail] = useState(initEmail);
   const [firstName, setFirstName] = useState(initFirstName);
   const [lastName, setLastName] = useState(initLastName);
   const [avatarUrl, setAvatarUrl] = useState(initAvatarUrl);
@@ -22,10 +27,13 @@ export const AuthContextProvider = (props) => {
 
   const userIsLoggedIn = token ? true : false;
 
-  const LoginHandler = (token, firstName, lastName, avatarUrl, role) => {
+  const LoginHandler = (token, firstName, lastName, avatarUrl, email, role) => {
     setToken(token);
     localStorage.setItem("token", "Bearer " + token);
-    console.log("Bearer " + token);
+
+    setEmail(email);
+    localStorage.setItem("email", email);
+
     setAvatarUrl(avatarUrl);
     localStorage.setItem("avatarUrl", avatarUrl);
 
@@ -44,10 +52,12 @@ export const AuthContextProvider = (props) => {
         setFirstName(null);
         setAvatarUrl(null);
         setLastName(null);
+        setEmail(null);
         setRole(null);
         setToken(null);
         localStorage.removeItem("firstName");
         localStorage.removeItem("lastName");
+        localStorage.removeItem("email");
         localStorage.removeItem("avatarUrl");
         localStorage.removeItem("token");
         localStorage.removeItem("role");
@@ -64,8 +74,9 @@ export const AuthContextProvider = (props) => {
     logout: LogoutHandler,
     firstName: firstName,
     lastName: lastName,
-    avatarUrl: avatarUrl,
+    photo: avatarUrl,
     role: role,
+    email: email,
   };
   return (
     <AuthContext.Provider value={contextValue}>

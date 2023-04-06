@@ -42,3 +42,17 @@ export const unlockUser = async (token, userId) => {
   });
   return res.data;
 };
+
+export const updateUser = async (data, token) => {
+  const res = await axios.patch(
+    `${APP_BASE_URL}/api/v1/users/update-me`,
+    data,
+    {
+      headers: {
+        Authorization: `${token}`,
+        "Content-Type": "multipart/form-data",
+      },
+    }
+  );
+  return res.data;
+};
