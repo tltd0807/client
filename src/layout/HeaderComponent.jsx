@@ -1,24 +1,33 @@
 import React, { useContext } from 'react'
-import { Link } from 'react-router-dom'
-import { Input, Popover } from 'antd';
+import { Link, useNavigate } from 'react-router-dom'
+import { Button, Input, Popover } from 'antd';
 import { ShoppingCartOutlined ,UserOutlined  } from '@ant-design/icons';
 import AuthContext from '../store/authCtx';
 const { Search } = Input;
 
 const HeaderComponent = (props) => {
-  const authCtx=useContext( AuthContext)
-  const content = (
+  const authCtx=useContext( AuthContext);
+  const navigate= useNavigate()
+const logout=()=>{
+  authCtx.logout();
+    navigate('/')
+}
+  const content = authCtx.isLoggedIn?(
     <div>
       <p className='font-bold'>{`${authCtx.firstName||'A'} ${authCtx.lastName||'A'}`}</p>
       <br />
       <ul className='list-disc ml-[10px]' >
         <li><Link to={'/account'}>Tài khoản của tôi</Link> </li>
         <li><Link to={'/account/address'}>Danh sách địa chỉ</Link> </li>
-        <li>Đăng xuất</li>
+        <li className='hover:cursor-pointer hover:text-[#48cae4]' onClick={logout}>Đăng xuất</li>
       </ul>
-      
     </div>
-  );
+  ):(<div>
+    <p>Chưa có tài khoản ? <Link to={"/signup"}><span className=' font-bold hover:text-[#48cae4]'>Đăng ký ngay</span> </Link>
+    <br />
+    hoặc <Link to={"/login"}> <span className=' font-bold hover:text-[#48cae4]'>đăng nhập</span></Link>
+    </p>
+  </div>);
 const cartContent=(  
 <div>
   <p >cartItem1</p>
@@ -42,7 +51,7 @@ const cartContent=(
         <div>
          <Search placeholder="Tìm kiếm hi vọng cho đôi chân của bạn" loading={false} enterButton  className='w-[350px]'/>
         </div>
-        <Popover content={content} title="Thông tin tài khoản">
+        <Popover content={content} title={authCtx.isLoggedIn?"Thông tin tài khoản":""}>
           <div>
             <UserOutlined className='text-white text-[25px] hover:text-[#48cae4] hover:cursor-pointer'/>
           </div>

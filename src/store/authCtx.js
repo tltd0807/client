@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { isLoggedIn } from "../api/authAPI";
+import { logoutUser } from "../api/authAPI";
 
 const AuthContext = React.createContext({
-  isLoggedIn: () => {},
+  isLoggedIn: false,
   logout: () => {},
   userFirstName: "",
   photo: "",
@@ -20,15 +20,8 @@ export const AuthContextProvider = (props) => {
   const [avatarUrl, setAvatarUrl] = useState(initAvatarUrl);
   const [role, setRole] = useState(initRole);
 
-  const userIsLoggedIn = (token) => {
-    isLoggedIn(token)
-      .then((res) => {
-        return true;
-      })
-      .catch((err) => {
-        return false;
-      });
-  };
+  const userIsLoggedIn = token ? true : false;
+
   const LoginHandler = (token, firstName, lastName, avatarUrl, role) => {
     setToken(token);
     localStorage.setItem("token", "Bearer " + token);
@@ -45,17 +38,23 @@ export const AuthContextProvider = (props) => {
     setRole(role);
     localStorage.setItem("role", role);
   };
-  const LogoutHandler = () => {
-    setFirstName(null);
-    setAvatarUrl(null);
-    setLastName(null);
-    setRole(null);
-    setToken(null);
-    localStorage.removeItem("userName");
-    localStorage.removeItem("lastName");
-    localStorage.removeItem("avatarUrl");
-    localStorage.removeItem("token");
-    localStorage.removeItem("role");
+  const LogoutHandler = async () => {
+    await logoutUser()
+      .then((res) => {
+        setFirstName(null);
+        setAvatarUrl(null);
+        setLastName(null);
+        setRole(null);
+        setToken(null);
+        localStorage.removeItem("firstName");
+        localStorage.removeItem("lastName");
+        localStorage.removeItem("avatarUrl");
+        localStorage.removeItem("token");
+        localStorage.removeItem("role");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const contextValue = {
