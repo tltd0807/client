@@ -7,6 +7,7 @@ import LandingPage from "./pages/LandingPage";
 import SignUpPage from "./pages/SignUpPage";
 import ForgotPage from "./pages/ForgotPage";
 import ResetPage from "./pages/ResetPage";
+import Address from "./pages/User/Address";
 
 import "./App.css";
 
@@ -17,6 +18,7 @@ function App() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/home" element={<HomePage />} />
         <Route path="/account" element={<Account />} />
+        <Route path="/account/address" element={<Address />} />
         <Route path="/admin" element={<AdminHome />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUpPage />} />
