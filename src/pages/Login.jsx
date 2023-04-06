@@ -1,12 +1,50 @@
-import React from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { Button, Form, Input } from 'antd';
-import { Link } from 'react-router-dom';
-
+import { Button, Form, Input, Modal } from 'antd';
+import { Link, useNavigate } from 'react-router-dom';
+import {loginUser} from '../api/authAPI'
+import AuthContext from '../store/authCtx';
+const success = (mes) => {
+  Modal.success({
+    title:'SUCCESS',
+    content: mes,
+    closable:true,
+  });
+};
+const error = (mes) => {
+  Modal.error({
+    title: "ERROR",
+    content: mes,
+    closable:true,
+  });
+};
 const Login = () => {
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const authCtx = useContext(AuthContext);
+
+// useEffect(() => {
+//   authCtx.isLoggedIn(authCtx.token)
+
+// }, [loading])
+
   const onFinish = (values) => {
-    console.log('Received values of form: ', values);
-    //values: {email: 'test@gmail.com', password: '5khkryrkr'}
+    setLoading(true);
+    loginUser(values).then((res) => {
+      setLoading(false);
+      authCtx.login(res.token,res.data.user.firstName,res.data.user.lastName, res.data.user.photo, res.data.user.role)
+      success("Đăng nhập thành công")
+      setTimeout(()=>{
+        Modal.destroyAll();
+        navigate("/");
+      },500)
+
+      
+    })
+    .catch((err) => {
+      setLoading(false);
+      error( err.response.data.message)
+    });
   };
   return (
     <main className='w-screen h-screen flex justify-center items-center'>
@@ -18,6 +56,7 @@ const Login = () => {
         remember: false,
       }}
       onFinish={onFinish}
+      disabled={loading}
     >
       <Form.Item
         name="email"
@@ -63,10 +102,10 @@ const Login = () => {
         </Link>
       </Form.Item>
 
-      <Form.Item>
-        <Button type="primary" htmlType="submit" className="text-[#48cae4] border border-[#48cae4]">
+      <Form.Item><Button type="primary" htmlType="submit" className="text-[#48cae4] border border-[#48cae4]">
           Đăng nhập
         </Button>
+        
         Chưa có tài khoản? <Link to={'/signup'}><span className='text-[#1677ff] hover:text-[#1677ffde]'> Đăng ký ngay</span></Link>
       </Form.Item>
     </Form></div></main>

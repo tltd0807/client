@@ -1,0 +1,20 @@
+import axios from "axios";
+import { APP_BASE_URL } from "./../configs/constants";
+
+export const registerUser = async (data) => {
+  console.log(`${APP_BASE_URL}/api/v1/users/signup`, data);
+  const res = await axios.post(`${APP_BASE_URL}/api/v1/users/signup`, data);
+  return res.data;
+};
+
+export const loginUser = async (data) => {
+  const res = await axios.post(`${APP_BASE_URL}/api/v1/users/login`, data);
+  return res.data;
+};
+
+export const isLoggedIn = async (token) => {
+  const res = await axios.get(`${APP_BASE_URL}/api/v1/users/me-test`, {
+    headers: { Authorization: `${token}` },
+  });
+  return res.data;
+};
