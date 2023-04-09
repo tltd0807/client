@@ -4,6 +4,7 @@ import { PlusOutlined, LoadingOutlined } from "@ant-design/icons";
 import AuthContext from '../../../store/authCtx';
 import { updateUser } from '../../../api/userAPI';
 import { filterObj } from '../../../configs/constants';
+import CheckableTag from 'antd/es/tag/CheckableTag';
 
 // KIỂM TRA FILE TRƯỚC KHI GỬI
 const beforeUpload = (file) => {
@@ -33,9 +34,10 @@ const ChangeInfo = (props) => {
       content: `Thay đổi thông tin?`,
       okText:<span  className="text-[#48cae4] hover:text-white">OK</span>,
       onOk() {
+        console.log(token)
         updateUser(formData, token)
           .then((res) => {
-              success("Thay đổi thành công. h");
+              success("Thay đổi thành công.");
               props.setUserInfo(filterObj(res.data.user, 'firstName', 'lastName', 'email',"photo"))
           })
           .catch((err) => {

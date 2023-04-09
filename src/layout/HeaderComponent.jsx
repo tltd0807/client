@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { Button, Input, Popover } from 'antd';
+import {  Input, Popover } from 'antd';
 import { ShoppingCartOutlined ,UserOutlined  } from '@ant-design/icons';
 import AuthContext from '../store/authCtx';
 const { Search } = Input;
@@ -12,22 +12,41 @@ const logout=()=>{
   authCtx.logout();
     navigate('/')
 }
-  const content = authCtx.isLoggedIn?(
-    <div>
-      <p className='font-bold'>{`${authCtx.firstName||'A'} ${authCtx.lastName||'A'}`}</p>
-      <br />
+let content='';
+if(authCtx.isLoggedIn) {
+  if(authCtx.role==="admin") {
+    content=(<div>
       <ul className='list-disc ml-[10px]' >
-        <li><Link to={'/account'}>Tài khoản của tôi</Link> </li>
-        <li><Link to={'/account/address'}>Danh sách địa chỉ</Link> </li>
+        <li><Link to={'/admin'}>Dashboard</Link> </li>
+        {/* /admin/product */}
+        <li><Link to={'/admin'}>Trang sản phẩm</Link> </li>
+        <li><Link to={'/admin'}>Dashboard</Link> </li>
+        
         <li className='hover:cursor-pointer hover:text-[#48cae4]' onClick={logout}>Đăng xuất</li>
       </ul>
-    </div>
-  ):(<div>
-    <p>Chưa có tài khoản ? <Link to={"/signup"}><span className=' font-bold hover:text-[#48cae4]'>Đăng ký ngay</span> </Link>
-    <br />
-    hoặc <Link to={"/login"}> <span className=' font-bold hover:text-[#48cae4]'>đăng nhập</span></Link>
-    </p>
-  </div>);
+    </div>)
+  }else{
+    content = (
+      <div>
+        <p className='font-bold'>{`${authCtx.firstName||'A'} ${authCtx.lastName||'A'}`}</p>
+        <br />
+        <ul className='list-disc ml-[10px]' >
+          <li><Link to={'/account'}>Tài khoản của tôi</Link> </li>
+          <li><Link to={'/account/address'}>Danh sách địa chỉ</Link> </li>
+          <li className='hover:cursor-pointer hover:text-[#48cae4]' onClick={logout}>Đăng xuất</li>
+        </ul>
+      </div>
+    )
+  }
+}else{
+  content = (<div>
+     <p>Chưa có tài khoản ? <Link to={"/signup"}><span className=' font-bold hover:text-[#48cae4]'>Đăng ký ngay</span> </Link>
+     <br />
+     hoặc <Link to={"/login"}> <span className=' font-bold hover:text-[#48cae4]'>đăng nhập</span></Link>
+     </p>
+   </div>);
+   }
+  
 const cartContent=(  
 <div>
   <p >cartItem1</p>

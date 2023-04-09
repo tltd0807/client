@@ -37,9 +37,13 @@ export const lockUser = async (token, userId) => {
 };
 
 export const unlockUser = async (token, userId) => {
-  const res = await axios.patch(`${APP_BASE_URL}/api/v1/users/${userId}`, {
-    headers: { Authorization: `${token}` },
-  });
+  const res = await axios.patch(
+    `${APP_BASE_URL}/api/v1/users/${userId}`,
+    userId,
+    {
+      headers: { Authorization: `${token}` },
+    }
+  );
   return res.data;
 };
 

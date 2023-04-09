@@ -28,7 +28,7 @@ export const AuthContextProvider = (props) => {
   const userIsLoggedIn = token ? true : false;
 
   const LoginHandler = (token, firstName, lastName, avatarUrl, email, role) => {
-    setToken(token);
+    setToken(token.startsWith("Bearer") ? token : "Bearer " + token);
     localStorage.setItem("token", "Bearer " + token);
 
     setEmail(email);
@@ -40,14 +40,14 @@ export const AuthContextProvider = (props) => {
     setFirstName(firstName);
     localStorage.setItem("firstName", firstName);
 
-    setFirstName(lastName);
+    setLastName(lastName);
     localStorage.setItem("lastName", lastName);
 
     setRole(role);
     localStorage.setItem("role", role);
   };
-  const LogoutHandler = async () => {
-    await logoutUser()
+  const LogoutHandler = () => {
+    logoutUser()
       .then((res) => {
         setFirstName(null);
         setAvatarUrl(null);

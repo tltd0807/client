@@ -27,3 +27,9 @@ code {
 .ant-input-search-button{
   background: #1677ff;
 }
+.ant-switch{
+  background-color: red;
+}
+.ant-btn-primary{
+  color: #1677ff;
+}
