@@ -11,7 +11,7 @@ const LayoutComponent = (props) => {
   } = theme.useToken();
   return (
     <Layout className="layout min-h-screen">
-      <HeaderComponent></HeaderComponent>
+      <HeaderComponent/>
       <Content
         style={{
           padding: "0 50px"
@@ -19,7 +19,7 @@ const LayoutComponent = (props) => {
       
       >
         <div
-          className="site-layout-content"
+          className="site-layout-content mx-0"
           style={{
             background: colorBgContainer
           }}

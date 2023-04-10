@@ -16,23 +16,21 @@ const [userInfo, setUserInfo] = useState({
   email:authCtx.email
 })
 const [isShowChangeInfo, setIsShowChangeInfo] = useState(false)
-
-  console.log(userInfo)
   return (
     <LayoutComponent>
       <main className='flex justify-center space-x-4'>
       <AccountNav userInfo={userInfo}/>
       <section className='min-w-[900px] '>
       
-        <Descriptions title="Thông tin tài khoản" layout="vertical" bordered column={2} className='text-left'>
-    <Descriptions.Item label="Họ">{userInfo.lastName}</Descriptions.Item>
-    <Descriptions.Item label="Tên">{userInfo.firstName}</Descriptions.Item>
-    <Descriptions.Item label="Email" span={2}>
-      {userInfo.email}
-    </Descriptions.Item>
+      <Descriptions title="Thông tin tài khoản" layout="vertical" bordered column={2} className='text-left'>
+      <Descriptions.Item label="Họ">{userInfo.lastName}</Descriptions.Item>
+      <Descriptions.Item label="Tên">{userInfo.firstName}</Descriptions.Item>
+      <Descriptions.Item label="Email" span={2}>
+        {userInfo.email}
+      </Descriptions.Item>
   </Descriptions>
   <Button onClick={()=>setIsShowChangeInfo(old=>!old)}>Sửa thông tin</Button>
-  {isShowChangeInfo&&<ChangeInfo setUserInfo={setUserInfo}/>}
+  {isShowChangeInfo&&<ChangeInfo setUserInfo={setUserInfo} />}
   
       </section>
       </main>

@@ -8,6 +8,7 @@ import SignUpPage from "./pages/SignUpPage";
 import ForgotPage from "./pages/ForgotPage";
 import ResetPage from "./pages/ResetPage";
 import Address from "./pages/User/Address";
+import ProductPage from "./pages/Product/ProductPage";
 import AuthContext from "./store/authCtx";
 
 import "./App.css";
@@ -18,6 +19,7 @@ function App() {
     <div className="App">
       <Routes>
         <Route path="/" element={<HomePage />} />
+        <Route path="/product" element={<ProductPage />} />
         {authCtx.isLoggedIn && <Route path="/account" element={<Account />} />}
         {authCtx.isLoggedIn && (
           <Route path="/account/address" element={<Address />} />

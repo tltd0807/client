@@ -38,7 +38,8 @@ const ChangeInfo = (props) => {
         updateUser(formData, token)
           .then((res) => {
               success("Thay đổi thành công.");
-              props.setUserInfo(filterObj(res.data.user, 'firstName', 'lastName', 'email',"photo"))
+              props.setUserInfo(filterObj(res.data.user, 'firstName', 'lastName', 'email',"photo"));
+      
           })
           .catch((err) => {
             console.log(err);

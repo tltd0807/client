@@ -61,7 +61,7 @@ const cartContent=(
         </Link>
         </div>
       <nav className='flex space-x-10 text-[18px]'>
-        <div className='hover:text-[#48cae4] hover:cursor-pointer'>Sản phẩm</div>
+        <div className='hover:text-[#48cae4] hover:cursor-pointer'><Link to={'/product'}>Sản phẩm</Link> </div>
         <div className='hover:text-[#48cae4] hover:cursor-pointer'>Nam</div>
         <div className='hover:text-[#48cae4] hover:cursor-pointer'>Nữ</div>
         <div className='hover:text-[#48cae4] hover:cursor-pointer'>Giảm giá</div>

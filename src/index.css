@@ -24,12 +24,18 @@ code {
   min-width: 100%;
 }
 
-.ant-input-search-button{
-  background: #1677ff;
-}
+
 .ant-switch{
   background-color: red;
 }
 .ant-btn-primary{
   color: #1677ff;
+}
+.ant-input-search-button{
+  background: #1677ff;
+  color: #fff;
+}
+.site-layout-content{
+  padding-left: 0;
+  padding-right: 0;
 }

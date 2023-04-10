@@ -60,3 +60,38 @@ export const updateUser = async (data, token) => {
   );
   return res.data;
 };
+
+export const createAddress = async (token, data) => {
+  const res = await axios.post(`${APP_BASE_URL}/api/v1/users/address`, data, {
+    headers: { Authorization: `${token}` },
+  });
+  return res.data;
+};
+
+export const getAllAddress = async (token) => {
+  const res = await axios.get(`${APP_BASE_URL}/api/v1/users/address`, {
+    headers: { Authorization: `${token}` },
+  });
+  return res.data;
+};
+
+export const deleteAddress = async (token, addressId) => {
+  const res = await axios.delete(
+    `${APP_BASE_URL}/api/v1/users/address/${addressId}`,
+    {
+      headers: { Authorization: `${token}` },
+    }
+  );
+  return res.data;
+};
+
+export const updateAddress = async (token, addressId, data) => {
+  const res = await axios.patch(
+    `${APP_BASE_URL}/api/v1/users/address/${addressId}`,
+    data,
+    {
+      headers: { Authorization: `${token}` },
+    }
+  );
+  return res.data;
+};
