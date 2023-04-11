@@ -13,19 +13,19 @@ const logout=()=>{
     navigate('/')
 }
 let content='';
+let title='';
 if(authCtx.isLoggedIn) {
   if(authCtx.role==="admin") {
+    title="Chào admin"
     content=(<div>
       <ul className='list-disc ml-[10px]' >
-        <li><Link to={'/admin'}>Dashboard</Link> </li>
-        {/* /admin/product */}
-        <li><Link to={'/admin'}>Trang sản phẩm</Link> </li>
         <li><Link to={'/admin'}>Dashboard</Link> </li>
         
         <li className='hover:cursor-pointer hover:text-[#48cae4]' onClick={logout}>Đăng xuất</li>
       </ul>
     </div>)
   }else{
+    title="Thông tin tài khoản"
     content = (
       <div>
         <p className='font-bold'>{`${authCtx.firstName||'A'} ${authCtx.lastName||'A'}`}</p>
@@ -70,7 +70,7 @@ const cartContent=(
         <div>
          <Search placeholder="Tìm kiếm hi vọng cho đôi chân của bạn" loading={false} enterButton  className='w-[350px]'/>
         </div>
-        <Popover content={content} title={authCtx.isLoggedIn?"Thông tin tài khoản":""}>
+        <Popover content={content} title={authCtx.isLoggedIn?title:""}>
           <div>
             <UserOutlined className='text-white text-[25px] hover:text-[#48cae4] hover:cursor-pointer'/>
           </div>

@@ -46,8 +46,8 @@ const [currentKey, setCurrentKey] = useState("2")
        <section className='min-h-[775px] w-full px-1'>
        {currentKey==='1'&&<StatisticApp/>}
        {currentKey==='2'&&<AccountManagement/>}
-       {currentKey==='3'&&<OrderManagement/>}
-       {currentKey==='4'&&<ProductManagement/>}
+       {currentKey==='3'&&<ProductManagement/>}
+       {currentKey==='4'&&<OrderManagement/>}
        </section>
    
 
