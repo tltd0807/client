@@ -42,7 +42,10 @@ export const resetPassword = async (resetToken, data) => {
 export const updatePassword = async (token, data) => {
   const res = await axios.patch(
     `${APP_BASE_URL}/api/v1/users/change-password`,
-    data
+    data,
+    {
+      headers: { Authorization: `${token}` },
+    }
   );
   return res.data;
 };

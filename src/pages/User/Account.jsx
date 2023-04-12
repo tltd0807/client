@@ -5,6 +5,7 @@ import AccountNav from './AccountNav'
 import AuthContext from '../../store/authCtx'
 import { Button, Descriptions } from 'antd'
 import ChangeInfo from './AccountView/ChangeInfo'
+import ChangePassword from './AccountView/ChangePassword'
 
 const Account = () => {
 const authCtx= useContext(AuthContext)
@@ -16,6 +17,7 @@ const [userInfo, setUserInfo] = useState({
   email:authCtx.email
 })
 const [isShowChangeInfo, setIsShowChangeInfo] = useState(false)
+const [isShowChangePass, setIsShowChangePass] = useState(false)
   return (
     <LayoutComponent>
       <main className='flex justify-center space-x-4'>
@@ -29,9 +31,26 @@ const [isShowChangeInfo, setIsShowChangeInfo] = useState(false)
         {userInfo.email}
       </Descriptions.Item>
   </Descriptions>
-  <Button onClick={()=>setIsShowChangeInfo(old=>!old)}>Sửa thông tin</Button>
+  <Button onClick={()=>{
+        if(isShowChangePass) {
+          setIsShowChangePass(false);
+        if(!isShowChangeInfo) setIsShowChangeInfo(true); return;
+      }
+      setIsShowChangeInfo(old=>!old)
+        }}>Sửa thông tin</Button>  
+  <Button onClick={()=>{
+    if(isShowChangeInfo) {
+      setIsShowChangeInfo(false);
+    if(!isShowChangePass) setIsShowChangePass(true); return;
+  }
+    setIsShowChangePass(old=>!old)
+    }}>Đổi mật khẩu</Button>
+
+
   {isShowChangeInfo&&<ChangeInfo setUserInfo={setUserInfo} />}
-  
+
+
+  {isShowChangePass&&<ChangePassword  />}
       </section>
       </main>
     </LayoutComponent>

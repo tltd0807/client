@@ -4,6 +4,7 @@ import { logoutUser } from "../api/authAPI";
 const AuthContext = React.createContext({
   isLoggedIn: false,
   logout: () => {},
+  clearStoge: () => {},
   login: () => {},
   firstName: "",
   lastName: "",
@@ -46,21 +47,24 @@ export const AuthContextProvider = (props) => {
     setRole(role);
     localStorage.setItem("role", role);
   };
+  const clearStogeHandler = () => {
+    setFirstName(null);
+    setAvatarUrl(null);
+    setLastName(null);
+    setEmail(null);
+    setRole(null);
+    setToken(null);
+    localStorage.removeItem("firstName");
+    localStorage.removeItem("lastName");
+    localStorage.removeItem("email");
+    localStorage.removeItem("avatarUrl");
+    localStorage.removeItem("token");
+    localStorage.removeItem("role");
+  };
   const LogoutHandler = () => {
     logoutUser()
       .then((res) => {
-        setFirstName(null);
-        setAvatarUrl(null);
-        setLastName(null);
-        setEmail(null);
-        setRole(null);
-        setToken(null);
-        localStorage.removeItem("firstName");
-        localStorage.removeItem("lastName");
-        localStorage.removeItem("email");
-        localStorage.removeItem("avatarUrl");
-        localStorage.removeItem("token");
-        localStorage.removeItem("role");
+        clearStogeHandler();
       })
       .catch((err) => {
         console.log(err);
@@ -72,6 +76,7 @@ export const AuthContextProvider = (props) => {
     isLoggedIn: userIsLoggedIn,
     login: LoginHandler,
     logout: LogoutHandler,
+    clearStoge: clearStogeHandler,
     firstName: firstName,
     lastName: lastName,
     photo: avatarUrl,
