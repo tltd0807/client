@@ -8,6 +8,8 @@ import { getAllCategory } from '../../api/productAPI';
 const onFinish = (values) => {
   console.log('Success:', values);
   // Xử lý mấy cái size trc khi gửi xuống BE, thêm xử lý cái discount, xóa những cái undifined
+
+  // Thêm hình chưa
 };
 const onFinishFailed = (errorInfo) => {
   console.log('Failed:', errorInfo);

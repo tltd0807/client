@@ -23,10 +23,6 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const authCtx = useContext(AuthContext);
 
-// useEffect(() => {
-//   authCtx.isLoggedIn(authCtx.token)
-
-// }, [loading])
 
   const onFinish = (values) => {
     setLoading(true);
