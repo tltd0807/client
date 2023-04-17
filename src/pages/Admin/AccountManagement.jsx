@@ -41,7 +41,7 @@ const AccountManagement = () => {
   return (
     <div className=' w-full'>
     
-        <Table dataSource={users} rowKey={(record)=>record._id}     pagination={{
+        <Table dataSource={users} rowKey={(record)=>record._id}   pagination={{
       pageSize: 10,
     }}>
         <Column title="Hình đại diện" dataIndex="photo" key="photo" render={photo=> <Avatar src={photo}/>

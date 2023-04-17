@@ -59,7 +59,7 @@ import AuthContext from '../store/authCtx';
     registerUser(values).then((res) => {
       setLoading(false);
       authCtx.login(res.token,res.data.user.firstName,res.data.user.lastName, res.data.user.photo,res.data.user.email, res.data.user.role)
-      success("Đăng nhập thành công");
+      success("Đăng ký thành công");
       setTimeout(()=>{
         Modal.destroyAll();
         navigate("/");

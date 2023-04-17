@@ -4,12 +4,12 @@ import CreateProduct from '../Product/CreateProduct';
 
 const ProductManagement = () => {
   const authCtx= useContext(AuthContext);
-  const [reload, setReload] = useState(true)
+
 
 
   return (
     <section>
-      <div className=''>
+      <div className='py-6'>
         <CreateProduct/>
       </div>
       <div className='bg-[#5d7074]'>

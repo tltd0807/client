@@ -13,3 +13,11 @@ export const getAllCategory = async () => {
   const res = await axios.get(`${APP_BASE_URL}/api/v1/category`);
   return res.data;
 };
+
+export const createProduct = async (token, data) => {
+  const res = await axios.post(`${APP_BASE_URL}/api/v1/products`, data, {
+    headers: { Authorization: `${token}` },
+    "Content-Type": "multipart/form-data",
+  });
+  return res.data;
+};
