@@ -21,3 +21,15 @@ export const createProduct = async (token, data) => {
   });
   return res.data;
 };
+
+export const updateProduct = async (token, data, productId) => {
+  const res = await axios.patch(
+    `${APP_BASE_URL}/api/v1/products/${productId}`,
+    data,
+    {
+      headers: { Authorization: `${token}` },
+      "Content-Type": "multipart/form-data",
+    }
+  );
+  return res.data;
+};

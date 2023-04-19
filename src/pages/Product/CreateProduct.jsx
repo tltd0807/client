@@ -30,7 +30,7 @@ const onCreate = (values) => {
    formData.append("name", values.name);
    if(values.description)formData.append("description", values.description);
    formData.append("price", values.price);
-   if(values.discount)formData.append("discount",{percent:values.discount} );
+   if(values.discount)formData.append("discount",values.discount );
    formData.append("color", values.color);
    formData.append("gender", values.gender);
    formData.append("category", values.category);
