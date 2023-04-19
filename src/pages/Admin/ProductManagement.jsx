@@ -5,16 +5,16 @@ import ProductTable from '../Product/ProductTable/ProductTable';
 
 const ProductManagement = () => {
   const authCtx= useContext(AuthContext);
-
+const [reload, setReload] = useState(false)
 
 
   return (
     <section>
       <div className='py-6'>
-        <CreateProduct/>
+        <CreateProduct setReload={setReload}/>
       </div>
       <div className=''>
-      <ProductTable/>
+      <ProductTable reload={reload}/>
       </div>
     </section>
   )

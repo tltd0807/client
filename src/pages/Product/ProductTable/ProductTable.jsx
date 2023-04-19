@@ -1,8 +1,11 @@
-import React, {useState, useEffect, useContext} from 'react'
-import { Button, Image, Modal, Space, Table } from "antd";
-import { getAllProducts, updateProduct } from '../../../api/productAPI';
+import React, {useState, useEffect, useContext, useRef} from 'react'
+import { Button, Image, Input, Modal, Space, Table } from "antd";
+import { SearchOutlined,ExclamationCircleFilled } from '@ant-design/icons';
+import { deleteProduct, getAllCategory, getAllProducts, updateProduct } from '../../../api/productAPI';
 import UpdateProductForm from '../ProductForm/UpdateProductForm';
 import AuthContext from '../../../store/authCtx';
+import Highlighter from 'react-highlight-words';
+const { confirm } = Modal;
 const success = (mes) => {
   Modal.success({
     title:'SUCCESS',
@@ -18,12 +21,119 @@ const error = (mes) => {
   });
 };
 //   Thiếu category trong table
-const ProductTable = () => {
+const ProductTable = (props) => {
   const authCtx= useContext(AuthContext)
 const [data, setData] = useState([])
+const [category, setCategory] = useState([])
 const [productUpdate, setProductUpdate] = useState()
 const [reload, setReload] = useState(false)
 const [open, setOpen] = useState(false);
+const [searchText, setSearchText] = useState('');
+const [searchedColumn, setSearchedColumn] = useState('');
+const searchInput = useRef(null);
+const handleSearch = (selectedKeys, confirm, dataIndex) => {
+  confirm();
+  setSearchText(selectedKeys[0]);
+  setSearchedColumn(dataIndex);
+};
+const handleReset = (clearFilters) => {
+  clearFilters();
+  setSearchText('');
+};
+const getColumnSearchProps = (dataIndex) => ({
+  filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
+    <div
+      style={{
+        padding: 8,
+      }}
+      onKeyDown={(e) => e.stopPropagation()}
+    >
+      <Input
+        ref={searchInput}
+        placeholder={`Tìm ${dataIndex==="customeId"?'mã sản phẩm':'tên sản phẩm'}`}
+        value={selectedKeys[0]}
+        onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+        onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+        style={{
+          marginBottom: 8,
+          display: 'block',
+        }}
+      />
+      <Space>
+        <Button
+          type="primary"
+          onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+          icon={<SearchOutlined />}
+          size="small"
+          style={{
+            width: 90,
+          }}
+        >
+          Tìm
+        </Button>
+        <Button
+          onClick={() => clearFilters && handleReset(clearFilters)}
+          size="small"
+          style={{
+            width: 90,
+          }}
+        >
+          Reset
+        </Button>
+        <Button
+          type="link"
+          size="small"
+          onClick={() => {
+            confirm({
+              closeDropdown: false,
+            });
+            setSearchText(selectedKeys[0]);
+            setSearchedColumn(dataIndex);
+          }}
+        >
+          Lọc
+        </Button>
+        <Button
+          type="link"
+          size="small"
+          onClick={() => {
+            close();
+          }}
+        >
+          Đóng
+        </Button>
+      </Space>
+    </div>
+  ),
+  filterIcon: (filtered) => (
+    <SearchOutlined
+      style={{
+        color: filtered ? '#1890ff' : undefined,
+      }}
+    />
+  ),
+  onFilter: (value, record) =>
+    record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
+  onFilterDropdownOpenChange: (visible) => {
+    if (visible) {
+      setTimeout(() => searchInput.current?.select(), 100);
+    }
+  },
+  render: (text) =>
+    searchedColumn === dataIndex ? (
+      <Highlighter
+        highlightStyle={{
+          backgroundColor: '#ffc069',
+          padding: 0,
+        }}
+        searchWords={[searchText]}
+        autoEscape
+        textToHighlight={text ? text.toString() : ''}
+      />
+    ) : (
+      text
+    ),
+});
 const onCreate = (values) => {
   // cập nhật hình phải cập nhật luôn cả ảnh bìa
 console.log('Received values of form: ', values);
@@ -67,26 +177,66 @@ updateProduct(authCtx.token,formData, productUpdate.id).then((res) => {
   console.log(err.response.data.message);
 });
 };
+
+useEffect(() => {
+  getAllCategory().then(res=>{
+    setCategory(res.data.data)
+  }).catch(err=>{
+    console.log(err)
+  })
+
+}, [])
+  const categoryOpt=[];
+  for(let i=0; i<category.length;i++){
+    categoryOpt.push({value:category[i]._id, text:category[i].name })
+  }
+  const showDeleteConfirm = (product) => {
+    return confirm({
+      title: `Bạn chắn chắn xóa ${product.name} với mã sản phẩm  ${product.customeId}?`,
+      icon: <ExclamationCircleFilled />,
+      okText: 'Xóa',
+      okType: 'danger',
+      cancelText: 'Hủy',
+      onOk() {
+   deleteProduct(authCtx.token,product.id).then(res=>{
+    console.log(res)
+    setReload(old=>!old)
+    success("Đã xóa thành công")
+   }).catch(err=>{
+    console.log(err)
+    error(err.response.data.message)
+   })
+
+      },
+      onCancel() {
+        console.log('Cancel');
+      },
+    });
+  };
 const columns = [
   {
     title: "Mã sản phẩm",
     dataIndex: "customeId",
     key: "customeId",
   //   width: 120,
-    fixed: "left"
+    fixed: "left",
+    ...getColumnSearchProps('customeId'),
   },
   Table.EXPAND_COLUMN,
   {
     title: "Tên sản phẩm",
     dataIndex: "name",
     key: "name",
-  //   width: 180
+  //   width: 180,
+    ...getColumnSearchProps('name'),
   },
   {
       title: "Loại sản phẩm",
       dataIndex: "category",
       key: "category",
       // width: 120
+      filters:categoryOpt,
+      onFilter: (value, record) => record.categoryId.indexOf(value) === 0
     },
   {
     title: "Tồn kho",
@@ -100,7 +250,7 @@ const columns = [
       {
         title: "Số lượng trong kho",
         dataIndex: "stock",
-        // width: 80
+        width: 100
       },
       {
         title: "Đã bán ",
@@ -134,6 +284,22 @@ const columns = [
     key: "gender",
   //   width: 80,
   //   fixed: "right"
+      filters: [
+      {
+        text: 'Nam',
+        value: 'male',
+      },
+      {
+        text: 'Nữ',
+        value: 'female',
+      },
+      {
+        text: 'Khác',
+        value: 'unisex',
+      },
+    ],
+    onFilter: (value, record) => record.gender.indexOf(value) === 0,
+    render: (text) => <p>{`${text==='male'?"Nam":text==='female'?"Nữ":"Khác"}`}</p>,
   },
   {
     title: "Cập nhật",
@@ -149,6 +315,20 @@ const columns = [
       className='text-[#48cae4] border border-[#48cae4]'
     >
       Cập nhật thông tin
+    </Button>
+      </Space>
+    ),
+  },
+  {
+    title: "Xóa sản phẩm",
+    key: "delete",
+    render: (_, record) => (
+      <Space size="middle">
+        <Button
+        danger
+        onClick={()=>showDeleteConfirm(record)}
+    >
+      Xóa sản phẩm
     </Button>
       </Space>
     ),
@@ -188,7 +368,7 @@ const columns = [
             console.log(err)
         })
     
-    }, [reload])
+    }, [reload,props.reload])
     
   return (
     <>

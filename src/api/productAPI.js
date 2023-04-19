@@ -33,3 +33,13 @@ export const updateProduct = async (token, data, productId) => {
   );
   return res.data;
 };
+
+export const deleteProduct = async (token, productId) => {
+  const res = await axios.delete(
+    `${APP_BASE_URL}/api/v1/products/${productId}`,
+    {
+      headers: { Authorization: `${token}` },
+    }
+  );
+  return res.data;
+};

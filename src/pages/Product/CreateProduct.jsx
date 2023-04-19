@@ -18,7 +18,7 @@ const error = (mes) => {
     closable:true,
   });
 };
-const CreateProduct = () => {
+const CreateProduct = (props) => {
   const authCtx= useContext(AuthContext)
 
 const [open, setOpen] = useState(false);
@@ -42,6 +42,7 @@ const onCreate = (values) => {
   })
   setOpen(false);
   createProduct(authCtx.token, formData).then((res) => {
+    props.setReload(old=>!old)
     success("Tạo sản phẩm thành công");
   })
   .catch((err) => {
