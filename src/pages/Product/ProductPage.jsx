@@ -7,7 +7,6 @@ import ProductItem from './ProductItem'
 
 const ProductPage = () => {
 const [products, setProducts] = useState([])
-
 useEffect(() => {
     getAllProducts().then(res=>{
 

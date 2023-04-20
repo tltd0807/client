@@ -20,6 +20,7 @@ const getBase64 = (img, callback) => {
     return isJpgOrPng && isLt2M;
   };
 const UpdateProductForm = ({ open, onCreate, onCancel, product }) => {
+  console.log(product)
     const [form] = Form.useForm();
     const [category, setCategory] = useState([])
     const [fileList, setFileList] = useState([]);
@@ -33,6 +34,25 @@ useEffect(() => {
   })
 
 }, [])
+
+// useEffect(() => form.resetFields(),[form,product]);
+useEffect(() => {
+  form.setFieldsValue({
+    customeId:product.customeId,
+    name:product.name,
+    description:product.description,
+    price:product.price,
+    discount:product.discount,
+    color:product.color,
+    category:{label: product.category,value:product.categoryId},
+    gender:product.gender,
+    inventory:[{
+      size:product.size,
+      stock: product.stock,
+    }]
+  })
+ }, [form, product])
+
   const categoryOpt=[];
   for(let i=0; i<category.length;i++){
     categoryOpt.push({value:category[i]._id, label:category[i].name })
@@ -102,7 +122,7 @@ useEffect(() => {
                   <Form.Item
       label="Mã sản phẩm"
       name="customeId"
-      initialValue={product.customeId}
+      // initialValue={product.customeId}
     >
       <Input />
     </Form.Item></Col>
@@ -110,13 +130,15 @@ useEffect(() => {
                   <Form.Item
       label="Tên sản phẩm"
       name="name"
-      initialValue={product.name}
+      // initialValue={product.name}
     >
       <Input />
     </Form.Item>
     </Col>
               </Row>
-          <Form.Item name="description" label="Mô tả " initialValue={product.description} >
+          <Form.Item name="description" label="Mô tả " 
+          //initialValue={product.description}
+           >
             <Input.TextArea />
           </Form.Item>
 
@@ -125,7 +147,7 @@ useEffect(() => {
     <Form.Item
       label="Giá"
       name="price"
-      initialValue={product.price}
+      // initialValue={product.price}
     >
       <InputNumber addonAfter="VNĐ" min={1000}  step={1000}/>
     </Form.Item>
@@ -134,7 +156,7 @@ useEffect(() => {
     <Form.Item
       label="Giảm giá"
       name="discount"
-      initialValue={product.discount}
+      // initialValue={product.discount}
     >
       <InputNumber addonAfter="%" min={0}  max={100}/>
     </Form.Item>
@@ -144,7 +166,7 @@ useEffect(() => {
     <Form.Item
       label="Màu sản phẩm"
       name="color"
-      initialValue={product.color}
+      // initialValue={product.color}
     >
       <Input />
     </Form.Item>
@@ -156,7 +178,7 @@ useEffect(() => {
 <Form.Item
         name="category"
         label="Loại"
-        initialValue={{label: product.category,value:product.categoryId}}
+        // initialValue={{label: product.category,value:product.categoryId}}
       >
         <Select
           placeholder="Vui lòng chọn loại sản phẩm muốn đổi"
@@ -170,7 +192,7 @@ useEffect(() => {
 <Form.Item
         name="gender"
         label="Sản phẩm dành cho"
-        initialValue={product.gender}
+        // initialValue={product.gender}
       >
       <Select
           placeholder="Giới tính"
@@ -189,13 +211,15 @@ useEffect(() => {
           <Form.Item
             name={['inventory',0, 'size']}
             label="Size"
-            initialValue={product.size}
+            // initialValue={product.size}
           >
             <Input  disabled/>
           </Form.Item>
         </Col>
         <Col md={12} xs={24}>
-          <Form.Item name={['inventory',0, 'stock']} label="Số lượng trong kho" initialValue={product.stock}> 
+          <Form.Item name={['inventory',0, 'stock']} label="Số lượng trong kho" 
+          // initialValue={product.stock}
+          > 
           <InputNumber addonAfter="Đôi" min={0} />
           </Form.Item>
         </Col>
