@@ -13,6 +13,9 @@ import AuthContext from "./store/authCtx";
 
 import "./App.css";
 import ProductDetail from "./pages/Product/ProductDetail";
+import ProductCollection from "./pages/Product/ProductCollection";
+import ProductSearch from "./pages/Product/ProductSearch";
+import CartPage from "./pages/Cart/CartPage";
 
 function App() {
   const authCtx = useContext(AuthContext);
@@ -22,6 +25,9 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/product" element={<ProductPage />} />
         <Route path="/product/:productId" element={<ProductDetail />} />
+        <Route path="/collections" element={<ProductCollection />} />
+        <Route path="/search" element={<ProductSearch />} />
+        <Route path="/cart" element={<CartPage />} />
         {authCtx.isLoggedIn && <Route path="/account" element={<Account />} />}
         {authCtx.isLoggedIn && (
           <Route path="/account/address" element={<Address />} />

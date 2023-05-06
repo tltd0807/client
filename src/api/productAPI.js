@@ -9,6 +9,21 @@ export const getAllProducts = async () => {
   return res.data;
 };
 
+export const getAllProductsByGender = async (gender, limit) => {
+  const res = await axios.get(
+    `${APP_BASE_URL}/api/v1/products?gender=${gender}&limit=${limit || 10000}`
+  );
+  return res.data;
+};
+// api/v1/products?limit=3&sort=-discount
+export const getAllProductsByDiscount = async (limit) => {
+  const res = await axios.get(
+    `${APP_BASE_URL}/api/v1/products?limit=${
+      limit || 10000
+    }&sort=-discount&discount[gt]=0`
+  );
+  return res.data;
+};
 export const getAllCategory = async () => {
   const res = await axios.get(`${APP_BASE_URL}/api/v1/category`);
   return res.data;
@@ -44,9 +59,14 @@ export const deleteProduct = async (token, productId) => {
   return res.data;
 };
 
-// {{URL}}api/v1/products?name=Dép Eva
+export const getAllProductsByName = async (productName) => {
+  const res = await axios.get(
+    `${APP_BASE_URL}/api/v1/products?name=${productName}`
+  );
+  return res.data;
+};
 
-export const getAllProductsByName = async (productName, gender) => {
+export const getAllProductsByNameAndGender = async (productName, gender) => {
   const res = await axios.get(
     // `${APP_BASE_URL}/api/v1/products?fields=name,price,discount,imageCover,color,gender`
     `${APP_BASE_URL}/api/v1/products?gender=${gender}&name=${productName}`

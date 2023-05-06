@@ -1,15 +1,16 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import LayoutComponent from '../../layout/Layout'
 import {  useParams } from 'react-router-dom';
 import { Col, Image, Row ,Badge, Select, Button,Rate, Card } from 'antd';
-import { getAllProductsByName, getProductById } from '../../api/productAPI';
+import { getAllProductsByNameAndGender, getProductById } from '../../api/productAPI';
+import CartCtx from '../../store/cart/CartCtx';
 
 const ProductDetail = () => {
   const { productId } = useParams()
   // Dùng để set hình sản phẩm
   const [products, setProducts] = useState([])
-  const [quantity, setQuantity] = useState(0)
-
+  const [quantity, setQuantity] = useState(1)
+  const cartCtx= useContext(CartCtx)
   const [currentProduct, setCurrentProduct] = useState({
     discount:0,
     description:'',
@@ -35,7 +36,7 @@ console.log(currentProduct)
       // console.log(res.data.data)
       setCurrentProduct(res.data.data)
 
-      getAllProductsByName(res.data.data.name,res.data.data.gender).then(res=>{
+      getAllProductsByNameAndGender(res.data.data.name,res.data.data.gender).then(res=>{
         // console.log(res.data.data)
         setProducts(res.data.data)
       }).catch(err=>console.log(err))
@@ -47,15 +48,40 @@ console.log(currentProduct)
         }
         i++;
       }
-      
+    
+        window.scrollTo(0, 0)
+  
     }).catch(err=>console.log(err))
 
 
   }, [])
   const handleChange = (value) => {
     setQuantity(value);
-
   };
+  const addToCartHandler=async(currentProduct, size, quantity)=>{
+
+    const existItem=cartCtx.cartItems.find(item=>item.productId===currentProduct._id&&item.size===size);
+    const newQuantity= existItem ? existItem.quantity + quantity : 1;
+    getProductById(currentProduct._id).then(res=>{
+      const product=res.data.data;
+      const {stock: stockOfSize}= product.inventory.find(item=>item.size===size)
+
+      if (stockOfSize < newQuantity) {
+        window.alert('Sorry. Product is out of stock');
+        return;
+      }
+      cartCtx.addToCart({
+        size,
+        quantity:newQuantity,
+        productId:currentProduct._id, 
+        price:currentProduct.price, 
+        coverImage:currentProduct.imageCover, productName:currentProduct.name, discount:currentProduct.discount,
+        gender:currentProduct.gender,
+        customeId:currentProduct.customeId,
+        color:currentProduct.color})
+    }).catch(err=>{console.log(err)})
+
+  }
 const quantityArray=[];
 for(let i=1; i<=20&& i<=currentSize.stock; i++) quantityArray.push(i);
 
@@ -107,7 +133,7 @@ for(let i=1; i<=20&& i<=currentSize.stock; i++) quantityArray.push(i);
                 {products.map(product=>(
                 <div key={product.id} className='w-fit hover:cursor-pointer' onClick={()=>{
                   setCurrentProduct(product);
-                  setQuantity(0);
+                  setQuantity(1);
                   let i=0;
                   while(i<product.inventory.length){
                     if(product.inventory[i].stock>0){
@@ -129,7 +155,7 @@ for(let i=1; i<=20&& i<=currentSize.stock; i++) quantityArray.push(i);
                     <div key={item.size} className={`px-5 py-2 border border-1 border-[#000] ${item.stock===0?'hover:cursor-not-allowed bg-[#edf2f4] text-[#d6ccc2]':' hover:cursor-pointer'} ${item.size===currentSize.size?'bg-[#000] text-[#fff]':''}`} onClick={()=>{
                       if(item.stock===0||item.size===currentSize.size) return;
                       setCurrentSize(item)
-                      setQuantity(0);
+                      setQuantity(1);
                     }}>{item.size}</div>
                   ))
                 }
@@ -138,7 +164,7 @@ for(let i=1; i<=20&& i<=currentSize.stock; i++) quantityArray.push(i);
             <div className='flex flex-col items-start justify-start w-full gap-1 ml-7 text-[20px] mb-6'>
             <p>Số lượng:</p>
               <Select
-                defaultValue={0}
+                defaultValue={1}
                 style={{
                   width: 120,
 
@@ -154,11 +180,7 @@ for(let i=1; i<=20&& i<=currentSize.stock; i++) quantityArray.push(i);
 
             <div className='flex = justify-start w-full gap-1 ml-7 mb-6'>
 
-            <Button className='w-[320px] bg-[#caf0f8] text-[#003049] border border-[#48cae4] font-bold' size='large' onClick={()=>{
-              console.log("currentProduct.id: ",currentProduct.id)
-              console.log("currentSize.size: ",currentSize.size)
-              console.log("quantity: ",quantity)
-            }}> Đặt mua</Button>
+            <Button className='w-[320px] bg-[#caf0f8] text-[#003049] border border-[#48cae4] font-bold' size='large' onClick={()=>addToCartHandler(currentProduct,currentSize.size,quantity)}> Thêm vào giỏ hàng</Button>
             </div>
             <div className='flex flex-col items-start justify-start w-full gap-1 ml-7  mb-6'>
               <p className='text-[20px]'>Mô tả:</p>

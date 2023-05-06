@@ -1,13 +1,15 @@
 import React, { useContext } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import {  Input, Popover } from 'antd';
+import {  Badge, Button, Image, Input, Popover } from 'antd';
 import { ShoppingCartOutlined ,UserOutlined  } from '@ant-design/icons';
 import AuthContext from '../store/authCtx';
+import CartCtx from '../store/cart/CartCtx';
 const { Search } = Input;
 
 const HeaderComponent = (props) => {
   const authCtx=useContext( AuthContext);
-  const navigate= useNavigate()
+  const cartCtx = useContext(CartCtx)
+  const navigate= useNavigate();
 const logout=()=>{
   authCtx.logout();
     navigate('/')
@@ -46,11 +48,31 @@ if(authCtx.isLoggedIn) {
      </p>
    </div>);
    }
-  
+
 const cartContent=(  
-<div>
-  <p >cartItem1</p>
-  <p>cartItem2</p>
+<div className='flex flex-col items-center'>
+  <div className='max-h-[370px] overflow-y-scroll'>
+ {cartCtx.cartItems.map(item=>(
+ <div key={`${item.productId}-${item.size}`} className='flex space-x-4 border-b-2 my-4 px-3'>
+
+  <Image width={70} preview={false} src={item.coverImage}/>
+  <div>
+
+      <p className='w-fit'>{`${item.productName} ${item.gender==='male'?'Nam':item.gender==='female'?'Nữ':''} ${item.customeId} (${item.color})`} <span className='text-[#a8dadc] font-medium'>/{item.size}</span></p>
+
+    <div className=' flex space-x-2'>
+    <div className='w-fit bg-[#edf2f4] px-[15px] font-medium'>{item.quantity}</div>
+    <div className='w-fit flex space-x-1'>
+    <p className={`${item.discount>0?'line-through text-[#d6ccc2]':'font-medium'}`}>{item.price.toLocaleString('vi', {style : 'currency', currency : 'VND'})}  </p>
+    {item.discount>0?<p className='no-underline font-medium'>{Math.round((item.price*(1-item.discount/100)/1000)*1000).toLocaleString('vi', {style : 'currency', currency : 'VND'})}</p>:<></>}
+    </div>
+    </div>
+  </div>
+ </div>))}
+ </div>
+ <Button className='w-[320px] bg-[#caf0f8] text-[#003049] border border-[#48cae4] font-bold' size='large' onClick={()=>{
+  navigate('/cart')
+ }}> Xem chi tiết</Button>
 </div>);
 
   return (
@@ -62,24 +84,29 @@ const cartContent=(
         </div>
       <nav className='flex space-x-10 text-[18px]'>
         <div className='hover:text-[#48cae4] hover:cursor-pointer'><Link to={'/product'}>Sản phẩm</Link> </div>
-        <div className='hover:text-[#48cae4] hover:cursor-pointer'>Nam</div>
-        <div className='hover:text-[#48cae4] hover:cursor-pointer'>Nữ</div>
-        <div className='hover:text-[#48cae4] hover:cursor-pointer'>Giảm giá</div>
+        <div className='hover:text-[#48cae4] hover:cursor-pointer'><Link to={'/collections?type=male'}>Nam</Link></div>
+        <div className='hover:text-[#48cae4] hover:cursor-pointer'><Link to={'/collections?type=female'}>Nữ</Link></div>
+        <div className='hover:text-[#48cae4] hover:cursor-pointer'><Link to={'/collections?type=discount'}>Giảm giá</Link></div>
       </nav>
       <div className='flex space-x-4'>
         <div>
-         <Search placeholder="Tìm kiếm hi vọng cho đôi chân của bạn" loading={false} enterButton  className='w-[350px]'/>
+         <Search placeholder="Tìm kiếm hi vọng cho đôi chân của bạn" loading={false} enterButton  className='w-[350px]' onSearch={(value)=>{
+          navigate(`/search?name=${value}`)
+         }}/>
         </div>
         <Popover content={content} title={authCtx.isLoggedIn?title:""}>
           <div>
             <UserOutlined className='text-white text-[25px] hover:text-[#48cae4] hover:cursor-pointer'/>
           </div>
-  </Popover>
-  <Popover content={cartContent} title="GIỎ HÀNG">
-          <div>
-            <ShoppingCartOutlined style={{fontSize: '28px'}}  className='text-white text-[25px] hover:text-[#48cae4] hover:cursor-pointer' />
-          </div>
-  </Popover>
+
+        </Popover>
+        <Popover content={cartContent} title="GIỎ HÀNG">
+          <Badge count={cartCtx.cartItems.reduce((total, item)=>total+item.quantity,0)} showZero  onClick={()=>navigate('/cart')} className='hover:cursor-pointer'>
+            <div>
+              <ShoppingCartOutlined style={{fontSize: '28px'}}  className='text-white text-[25px] hover:text-[#48cae4] hover:cursor-pointer' />
+            </div>
+          </Badge>
+        </Popover>
           <div> 
            
           </div>
