@@ -29,7 +29,7 @@ const ProductDetail = () => {
       stock:0
     }
   )
-console.log(currentProduct)
+// console.log(currentProduct)
 
   useEffect(() => {
     getProductById(productId).then(res=>{

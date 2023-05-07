@@ -1,7 +1,7 @@
 import React, { useReducer } from "react";
 import CartCtx from "./CartCtx";
 import CartReducer from "./CartReducer";
-import { ADD_TO_CART, REMOVE_ITEM, CLEAR_CART } from "./Types";
+import { ADD_TO_CART, REMOVE_ITEM, CLEAR_CART, CHECK_STOCK } from "./Types";
 
 const CartState = ({ children }) => {
   const initalState = {
@@ -15,11 +15,14 @@ const CartState = ({ children }) => {
   const addToCart = (item) => {
     dispatch({ type: ADD_TO_CART, payload: item });
   };
-  const removeItem = (id) => {
-    dispatch({ type: REMOVE_ITEM, payload: id });
+  const removeItem = (item) => {
+    dispatch({ type: REMOVE_ITEM, payload: item });
   };
   const clearCart = (id) => {
     dispatch({ type: CLEAR_CART });
+  };
+  const checkStockAll = () => {
+    dispatch({ type: CHECK_STOCK });
   };
   return (
     <CartCtx.Provider
@@ -28,6 +31,7 @@ const CartState = ({ children }) => {
         addToCart,
         removeItem,
         clearCart,
+        checkStockAll,
       }}
     >
       {children}

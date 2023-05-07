@@ -1,4 +1,4 @@
-import { ADD_TO_CART, REMOVE_ITEM, CLEAR_CART } from "./Types";
+import { ADD_TO_CART, REMOVE_ITEM, CLEAR_CART, CHECK_STOCK } from "./Types";
 
 const CartReducer = (state, action) => {
   switch (action.type) {
@@ -27,11 +27,16 @@ const CartReducer = (state, action) => {
       };
     }
     case REMOVE_ITEM: {
-      const removeItemId = action.payload;
+      // console.log(action.payload);
       //   xóa bớt localStorage (key có thì nó replace all)
       const newCartItems = state.cartItems.filter(
-        (item) => item.productId !== removeItemId
+        (item) =>
+          !(
+            item.productId === action.payload.productId &&
+            item.size === action.payload.size
+          )
       );
+      localStorage.setItem("cartItems", JSON.stringify(newCartItems));
       return {
         // không cần check stock vì chỉ check ở add và check ở cart page, còn trừ s được khi vào cart page mà hết stock nó disable luôn
         cartItems: newCartItems,
@@ -41,6 +46,9 @@ const CartReducer = (state, action) => {
       return {
         cartItems: [],
       };
+    }
+    case CHECK_STOCK: {
+      return true;
     }
     default:
       return state;

@@ -5,6 +5,7 @@ const CartCtx = createContext({
   addToCart: () => {},
   removeItem: () => {},
   clearCart: () => {},
+  checkStockAll: () => {},
 });
 
 export default CartCtx;
