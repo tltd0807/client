@@ -1,7 +1,8 @@
-import { Button, Form, Input, Modal } from 'antd'
-import React, { useContext } from 'react'
+import { Button, Col, Form, Input, Modal, Row, Select } from 'antd'
+import React, { useContext, useEffect, useReducer, useState } from 'react'
 import AuthContext from '../../../store/authCtx';
 import { createAddress } from '../../../api/userAPI';
+import { getAllProvinces, getDistrictsByProvince, getWardsByDistrict } from '../../../api/provinceAPI';
 const success = (mes) => {
     Modal.success({
       title:'SUCCESS',
@@ -16,9 +17,55 @@ const success = (mes) => {
       closable:true,
     });
   };
-const AddressForm = ({setReload}) => {
-  const authCtx= useContext(AuthContext)
 
+const AddressForm = ({setReload}) => {
+  const authCtx= useContext(AuthContext);
+  const [address, setAddress] = useState({
+    provinces:[],
+    districts:[],
+    wards:[]
+  })
+useEffect(() => {
+  getAllProvinces().then(res=>{
+    // console.log(res)
+    setAddress({...address,provinces:[...res]})
+  }).catch(err=>{
+    console.log(err)
+  })
+}, [])
+
+ const provincesOptions=address.provinces.map(province=>{
+  return {"label":province.name,"value":province.name}
+ })
+ const districtsOptions=address.districts.map(district=>{
+  return {"label":district.name,"value":district.name}
+ })
+
+ const wardsOptions=address.wards.map(ward=>{
+  return {"label":ward.name,"value":ward.name}
+ })
+
+ const provinceChangeHandler=(value)=>{
+  const province= address.provinces.find(province=>province.name===value)
+  // console.log(province)
+  getDistrictsByProvince(province.code).then(res=>{
+    setAddress({...address,districts:[...res.districts],wards:[]})
+  }).catch(err=>{
+    console.log(err)
+  })
+ }
+
+ const districtChangeHandler=(value)=>{
+  const district= address.districts.find(district=>district.name===value)
+  // console.log(province)
+  getWardsByDistrict(district.code).then(res=>{
+    setAddress({...address,wards:[...res.wards]})
+  }).catch(err=>{
+    console.log(err)
+  })
+ }
+ 
+// console.log(provincesOptions)
     const onFinish = (values) => {
         console.log('Success:', values);
         createAddress(authCtx.token,values ).then(res=>{
@@ -97,6 +144,59 @@ const AddressForm = ({setReload}) => {
     >
       <Input />
     </Form.Item>
+
+    <Form.Item
+      label="Tỉnh thành"
+      name="city"
+      rules={[
+        {
+          required: true,
+          message: 'Vui lòng thêm tỉnh thành',
+        },
+      ]}
+    >
+      <Select
+      // style={{ width: 220 }}
+      options={provincesOptions}
+      onChange={provinceChangeHandler}
+    />
+    </Form.Item>
+
+        <Form.Item
+      label="Quận/huyện"
+      name="district"
+      rules={[
+        {
+          required: true,
+          message: 'Vui lòng thêm quận huyện',
+        },
+      ]}
+    >
+      <Select
+      // style={{ width: 220 }}
+      options={districtsOptions}
+      onChange={districtChangeHandler}
+    />
+    </Form.Item>
+
+        <Form.Item
+      label="Phường/xã"
+      name="ward"
+      rules={[
+        {
+          required: true,
+          message: 'Vui lòng thêm phường xã',
+        },
+      ]}
+    >
+      <Select
+      // style={{ width: 200 }}
+      options={wardsOptions}
+    />
+    </Form.Item>
+
+
+    
 
     <Form.Item
       wrapperCol={{

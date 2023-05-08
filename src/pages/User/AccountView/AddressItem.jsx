@@ -33,6 +33,7 @@ const AddressItem=({item, className,removeAddress,setReload})=>{
       error(err.response.data.message)
     })
   };
+  // console.log(item)
     return<> <Card className={`${className}`} 
     actions={[
         <EditOutlined key="edit" onClick={()=>{setOpen(true)}}/>,
@@ -41,16 +42,16 @@ const AddressItem=({item, className,removeAddress,setReload})=>{
       ><Descriptions column={2}>
     <Descriptions.Item label="Tên người nhận">{item.fullName}</Descriptions.Item>
     <Descriptions.Item label="SĐT">{item.phoneNo}</Descriptions.Item>
-    <Descriptions.Item span={2} label="Address">
-      {item.address}
+    <Descriptions.Item span={2} label="Địa chỉ">
+      {`${item.address}, ${item.ward}, ${item.district}, ${item.city}`}
     </Descriptions.Item>
   </Descriptions></Card>
   <AddressEdit
     open={open}
     onCreate={onCreate}
-        onCancel={() => {
-          setOpen(false);
-        }}
+    onCancel={() => {
+      setOpen(false);
+    }}
     item={item}
         />
   </>
