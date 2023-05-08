@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react'
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Form, Input, Modal } from 'antd';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {loginUser} from '../api/authAPI'
 import AuthContext from '../store/authCtx';
 const success = (mes) => {
@@ -23,6 +23,12 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const authCtx = useContext(AuthContext);
 
+  const {state} = useLocation();
+  let navigatePage='/';
+  if(state){
+    if(Object.hasOwn(state, 'previousPage')) navigatePage=state.previousPage
+  }
+  
 
   const onFinish = (values) => {
     setLoading(true);
@@ -36,7 +42,7 @@ const Login = () => {
 
           navigate("/admin");
         }else{
-          navigate("/");
+          navigate(navigatePage);
           
         }
       },1000)
