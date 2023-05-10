@@ -43,6 +43,7 @@ const CartReducer = (state, action) => {
       };
     }
     case CLEAR_CART: {
+      localStorage.removeItem("cartItems");
       return {
         cartItems: [],
       };

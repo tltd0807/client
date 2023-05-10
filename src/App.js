@@ -17,6 +17,7 @@ import ProductCollection from "./pages/Product/ProductCollection";
 import ProductSearch from "./pages/Product/ProductSearch";
 import CartPage from "./pages/Cart/CartPage";
 import CheckoutPage from "./pages/CheckoutPage";
+import OrderDetail from "./pages/Order/OrderDetail";
 
 function App() {
   const authCtx = useContext(AuthContext);
@@ -30,6 +31,9 @@ function App() {
         <Route path="/search" element={<ProductSearch />} />
         <Route path="/cart" element={<CartPage />} />
         {authCtx.isLoggedIn && <Route path="/account" element={<Account />} />}
+        {authCtx.isLoggedIn && (
+          <Route path="/order/:orderId" element={<OrderDetail />} />
+        )}
         {authCtx.isLoggedIn && (
           <Route path="/checkout" element={<CheckoutPage />} />
         )}

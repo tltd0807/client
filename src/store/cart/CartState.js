@@ -18,7 +18,7 @@ const CartState = ({ children }) => {
   const removeItem = (item) => {
     dispatch({ type: REMOVE_ITEM, payload: item });
   };
-  const clearCart = (id) => {
+  const clearCart = () => {
     dispatch({ type: CLEAR_CART });
   };
   const checkStockAll = () => {

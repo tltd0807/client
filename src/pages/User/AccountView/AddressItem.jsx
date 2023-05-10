@@ -34,18 +34,22 @@ const AddressItem=({item, className,removeAddress,setReload})=>{
     })
   };
   // console.log(item)
-    return<> <Card className={`${className}`} 
+    return<> 
+    <Card 
+    className={`${className}`} 
     actions={[
         <EditOutlined key="edit" onClick={()=>{setOpen(true)}}/>,
         <CloseOutlined key="delete" onClick={()=>removeAddress(item._id)} />,
       ]}
-      ><Descriptions column={2}>
-    <Descriptions.Item label="Tên người nhận">{item.fullName}</Descriptions.Item>
-    <Descriptions.Item label="SĐT">{item.phoneNo}</Descriptions.Item>
-    <Descriptions.Item span={2} label="Địa chỉ">
-      {`${item.address}, ${item.ward}, ${item.district}, ${item.city}`}
-    </Descriptions.Item>
-  </Descriptions></Card>
+      >
+      <Descriptions column={2}>
+        <Descriptions.Item  span={2} label="Tên người nhận">{item.fullName}</Descriptions.Item>
+        <Descriptions.Item span={2} label="SĐT">{item.phoneNo}</Descriptions.Item>
+        <Descriptions.Item span={2} label="Địa chỉ" className="text-left">
+          {`${item.address}, ${item.ward}, ${item.district}, ${item.city}`}
+        </Descriptions.Item>
+    </Descriptions>
+  </Card>
   <AddressEdit
     open={open}
     onCreate={onCreate}
