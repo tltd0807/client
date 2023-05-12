@@ -29,13 +29,13 @@ const logout=()=>{
              </div>
              <div className='flex items-center space-x-2'>
         <UnorderedListOutlined />
-             <Link to={'/'}>Quản lý đơn hàng</Link>
+             <Link to={'/account/orders'}>Quản lý đơn hàng</Link>
              </div>
              <div className='flex items-center space-x-2'>
         <HomeOutlined />
              <Link to={'/account/address'}>Danh sách địa chỉ</Link>
              </div>
-        <div onClick={logout} className='hover:cursor-pointer hover:text-[#48cae4]'>Đăng xuất</div>
+        <div onClick={logout} className='hover:cursor-pointer hover:text-[#48cae4] text-[#073b4c] font-medium'>Đăng xuất</div>
     </nav>
   )
 }

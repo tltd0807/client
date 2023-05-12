@@ -23,7 +23,7 @@ if(authCtx.isLoggedIn) {
       <ul className='list-disc ml-[10px]' >
         <li><Link to={'/admin'}>Dashboard</Link> </li>
         
-        <li className='hover:cursor-pointer hover:text-[#48cae4]' onClick={logout}>Đăng xuất</li>
+        <li className='hover:cursor-pointer hover:text-[#48cae4] ' onClick={logout}>Đăng xuất</li>
       </ul>
     </div>)
   }else{

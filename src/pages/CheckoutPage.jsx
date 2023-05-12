@@ -11,6 +11,7 @@ import COD from './../assets/icon/icon_COD.svg'
 import PayPal from './../assets/icon/PayPal_Logo2014.svg.png'
 import { createOrder } from '../api/orderAPI'
 import { useNavigate } from 'react-router-dom'
+import { PayPalButtons } from '@paypal/react-paypal-js'
 const success = (mes) => {
   Modal.success({
     title:'SUCCESS',
@@ -129,7 +130,27 @@ const createOrderHandler=()=>{
   }else{
     // Paypal taoj thif theem property paymentStatus có status:true nuawx
   }
-
+}
+const createOrderPayPal=(data, actions) => {
+  return actions.order.create({
+      purchase_units: [
+          {
+              amount: {
+                  value:Math.round((cartCtx.cartItems.reduce((total, item)=>total+Math.round((item.price*(1-item.discount/100)/1000)*1000*item.quantity),0)-appliedVoucer.discount+(addressArr[indexArrItem].city==="Thành phố Hồ Chí Minh"?20000:40000))/23000) ,
+              },
+          },
+      ],
+  });
+}
+const onApprovePayPal=(data, actions) => {
+  return actions.order.capture().then((details) => {
+      const name = details.payer.name.given_name;
+      console.log(details)
+      window.alert(`Transaction completed by ${name}`);
+  });
+}
+const onError=(err)=>{
+  window.alert(err);
 }
   return (
     <LayoutComponent>
@@ -231,7 +252,9 @@ const createOrderHandler=()=>{
                 </div>
               </div>
               {paymentMethod==="COD"?<Button className=' bg-[#caf0f8] text-[#003049] border border-[#48cae4] uppercase font-bold w-full' size='large'  onClick={createOrderHandler}>Hoàn tất đơn hàng</Button>
-              :<Button className=' bg-[#caf0f8] text-[#003049] border border-[#48cae4] uppercase font-bold w-full' size='large'  onClick={createOrderHandler}>Thanh toán đơn hàng</Button>}
+              :<PayPalButtons createOrder={createOrderPayPal}
+              onApprove={onApprovePayPal}
+              onError={onError} style={{ layout: "horizontal" }} />}
 
             </section>
         </main>}

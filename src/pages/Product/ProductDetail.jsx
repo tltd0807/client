@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react'
 import LayoutComponent from '../../layout/Layout'
 import {  useParams } from 'react-router-dom';
-import { Col, Image, Row ,Badge, Select, Button,Rate, Card } from 'antd';
+import { Col, Image, Row ,Badge, Select, Button,Rate, Card, Spin } from 'antd';
 import { getAllProductsByNameAndGender, getProductById } from '../../api/productAPI';
 import CartCtx from '../../store/cart/CartCtx';
 
@@ -9,6 +9,7 @@ const ProductDetail = () => {
   const { productId } = useParams()
   // Dùng để set hình sản phẩm
   const [products, setProducts] = useState([])
+  const [loading, setLoading] = useState(true)
   const [quantity, setQuantity] = useState(1)
   const cartCtx= useContext(CartCtx)
   const [currentProduct, setCurrentProduct] = useState({
@@ -35,7 +36,7 @@ const ProductDetail = () => {
     getProductById(productId).then(res=>{
       // console.log(res.data.data)
       setCurrentProduct(res.data.data)
-
+      setLoading(false)
       getAllProductsByNameAndGender(res.data.data.name,res.data.data.gender).then(res=>{
         // console.log(res.data.data)
         setProducts(res.data.data)
@@ -87,6 +88,8 @@ for(let i=1; i<=20&& i<=currentSize.stock; i++) quantityArray.push(i);
 
   return (
     <LayoutComponent>
+      {loading?<Spin size='large'/>:
+    <>
     <Row className=''>
       {/* nửa hình bên trái */}
       <Col span={12}>
@@ -221,6 +224,7 @@ for(let i=1; i<=20&& i<=currentSize.stock; i++) quantityArray.push(i);
       </Col>
       <Col span={16}>Đánh giá</Col>
     </Row>
+    </> }
 </LayoutComponent>
   )
 }

@@ -18,6 +18,7 @@ import ProductSearch from "./pages/Product/ProductSearch";
 import CartPage from "./pages/Cart/CartPage";
 import CheckoutPage from "./pages/CheckoutPage";
 import OrderDetail from "./pages/Order/OrderDetail";
+import OrdersList from "./pages/User/AccountView/OrdersList";
 
 function App() {
   const authCtx = useContext(AuthContext);
@@ -39,6 +40,9 @@ function App() {
         )}
         {authCtx.isLoggedIn && (
           <Route path="/account/address" element={<Address />} />
+        )}
+        {authCtx.isLoggedIn && (
+          <Route path="/account/orders" element={<OrdersList />} />
         )}
         {authCtx.isLoggedIn && <Route path="/admin" element={<AdminHome />} />}
         <Route path="/login" element={<Login />} />
