@@ -89,21 +89,22 @@ const onChangeRadioHandler = (e) => {
 const createOrderHandler=()=>{
   setLoading(true)
   const orderItems=cartCtx.cartItems.map(item=>{return{
-    "color": "Xanh Nhớt",
+    // "color": "Xanh Nhớt",
     "product":item.productId,
     "price":item.price*(1-item.discount/100),
     "size":item.size,
     "quantity":item.quantity
   }})
   // console.log(orderItems)
-  if(paymentMethod==="COD"){
+
     const data=appliedVoucer._id===""?
     {
       orderItems:orderItems,
       shippingPrice:(addressArr[indexArrItem].city==="Thành phố Hồ Chí Minh"?20000:40000),
       address:addressArr[indexArrItem],
+      paymentMethod:paymentMethod,
       paymentResult: {
-        status:false,
+        status:paymentMethod==="PayPal",
         updateTime: new Date(Date.now())
       }}
     :{
@@ -111,8 +112,9 @@ const createOrderHandler=()=>{
       voucher:appliedVoucer._id,
       shippingPrice:(addressArr[indexArrItem].city==="Thành phố Hồ Chí Minh"?20000:40000),
       address:addressArr[indexArrItem],
+      paymentMethod:"COD",
       paymentResult: {
-        status:false,
+        status:paymentMethod==="Paypal",
         updateTime: new Date(Date.now())
       }};
       // console.log(data)
@@ -126,13 +128,11 @@ const createOrderHandler=()=>{
     }).catch(err=>{
   console.log(err.response.data.message);
   setLoading(false);
-   window.alert("Lỗi")})
-  }else{
-    // Paypal taoj thif theem property paymentStatus có status:true nuawx
-  }
+   window.alert("Lỗi tạo order")})
+
 }
 const createOrderPayPal=(data, actions) => {
-  return actions.order.create({
+  return actions.order.create({ 
       purchase_units: [
           {
               amount: {
@@ -145,11 +145,13 @@ const createOrderPayPal=(data, actions) => {
 const onApprovePayPal=(data, actions) => {
   return actions.order.capture().then((details) => {
       const name = details.payer.name.given_name;
-      console.log(details)
+      // console.log(details)
       window.alert(`Transaction completed by ${name}`);
+      createOrderHandler();
   });
 }
 const onError=(err)=>{
+  // console.log(err)
   window.alert(err);
 }
   return (

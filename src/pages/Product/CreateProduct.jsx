@@ -23,7 +23,7 @@ const CreateProduct = (props) => {
 
 const [open, setOpen] = useState(false);
 const onCreate = (values) => {
-  console.log('Received values of form: ', values);
+  // console.log('Received values of form: ', values);
 
   const formData = new FormData();
    formData.append("customeId", values.customeId);

@@ -23,7 +23,7 @@ const AddressItem=({item, className,removeAddress,setReload})=>{
   
   const [open, setOpen] = useState(false);
   const onCreate = (values) => {
-    console.log('Received values of form: ', values);
+    // console.log('Received values of form: ', values);
     updateAddress(authCtx.token, item._id, values).then(res=>{
       setReload(old=>!old)
       setOpen(false);

@@ -90,7 +90,6 @@ const ChangeInfo = (props) => {
 
 
       const onFinish = (values) => {
-        console.log(values);
         const formData = new FormData();
         if(values.photo) formData.append("photo", values.photo.file.originFileObj);
         if(values.firstName) formData.append("firstName", values.firstName);

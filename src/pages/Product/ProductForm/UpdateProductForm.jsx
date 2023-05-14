@@ -20,7 +20,7 @@ const getBase64 = (img, callback) => {
     return isJpgOrPng && isLt2M;
   };
 const UpdateProductForm = ({ open, onCreate, onCancel, product }) => {
-  console.log(product)
+  // console.log(product)
     const [form] = Form.useForm();
     const [category, setCategory] = useState([])
     const [fileList, setFileList] = useState([]);

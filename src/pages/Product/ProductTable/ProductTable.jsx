@@ -136,7 +136,7 @@ const getColumnSearchProps = (dataIndex) => ({
 });
 const onCreate = (values) => {
   // cập nhật hình phải cập nhật luôn cả ảnh bìa
-console.log('Received values of form: ', values);
+// console.log('Received values of form: ', values);
 
   const formData = new FormData();
    if(values.customeId &&values.customeId!==productUpdate.customeId) formData.append("customeId", values.customeId);
@@ -389,6 +389,7 @@ const columns = [
     size="middle"
     expandable={{
       expandedRowRender: (record) => (
+        // Thêm reviews table ở đây được
         <div
           style={{
             margin: 0
@@ -417,10 +418,6 @@ const columns = [
         </div>
       )
     }}
-    // scroll={{
-    //   x: "calc(700px + 50%)",
-    //   y: 240
-    // }}
   />
   </>)
 }
