@@ -31,7 +31,7 @@ const OrdersList = () => {
         })
     }, [])
     const dataSource =[];
-    orders.forEach((item, index)=>{
+    orders.sort((a,b)=>a.createdAt>b.createdAt?-1:0).forEach((item, index)=>{
         let voucherDiscount=0;
         if(item.voucher)voucherDiscount=item.voucher.discount;
         const total=(item.orderItems.reduce((total, item)=>total+Math.round((item.price*(1-item.product.discount/100)/1000)*1000*item.quantity),0)-voucherDiscount+(item.address.city==="Thành phố Hồ Chí Minh"?20000:item.address.city===""?0:40000)).toLocaleString('vi', {style : 'currency', currency : 'VND'})

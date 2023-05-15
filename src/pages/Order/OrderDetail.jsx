@@ -5,13 +5,16 @@ import { getOrderById } from '../../api/orderAPI'
 import AuthContext from '../../store/authCtx'
 import { Button, Card, Descriptions, Image,  Spin, Table, Tag } from 'antd'
 import AccountNav from '../User/AccountNav'
+import ReviewForm from './ReviewForm'
+import { createReview } from '../../api/reviewAPI'
 
 const OrderDetail = () => {
     const authCtx=useContext(AuthContext);
     const { orderId } = useParams()
     const [order, setOrder] = useState({})
     const [loading, setLoading] = useState(true)
-    console.log(order)
+    const [productId, setProductId] = useState('')
+    // console.log(order)
     useEffect(() => {
       getOrderById(authCtx.token, orderId).then(res=>{
         setOrder(res.data.data)
@@ -98,10 +101,41 @@ const OrderDetail = () => {
         key: 'itemTotal',
         render: (_, {price, quantity}) => (
           <p className='text-center'>{(price*quantity).toLocaleString('vi', {style : 'currency', currency : 'VND'})}</p>)
-      }
+      },
+      {
+        title:'',
+        dataIndex: 'review',
+        key: 'review',
+        render: (_, {product}) =>(
+            <Button disabled={!(order.orderStatus==='done')} onClick={()=>{
+              setOpen(true);
+              setProductId(product._id)}}>Nhận xét</Button>)
+      },
     ]
+    const [open, setOpen] = useState(false);
+    const onCreate = (values,productId) => {
+      // console.log('productId: ', productId);
+      if(!values.comment)values.comment='';
+      // console.log('Received values of form: ', values);
+      createReview(authCtx.token, productId, values).then(res=>{
+        // console.log(res.data.data);
+        window.alert('Đã đánh giá thành công, đánh giá của bạn sẽ được xét duyệt trước khi hiển thị')
+      }).catch(err=>{
+        // console.log(err);
+        window.alert(err.response.data.message)
+      })
+      setOpen(false);
+    };
     return (
     <LayoutComponent>
+            <ReviewForm
+              open={open}
+              onCreate={onCreate}
+              productId={productId}
+              onCancel={() => {
+                setOpen(false);
+              }}
+            />
       <main className='flex justify-center space-x-8'>
         <AccountNav userInfo={{
         firstName: authCtx.firstName,
