@@ -4,6 +4,7 @@ import {  useParams } from 'react-router-dom';
 import { Col, Image, Row ,Badge, Select, Button,Rate, Card, Spin } from 'antd';
 import { getAllProductsByNameAndGender, getProductById } from '../../api/productAPI';
 import CartCtx from '../../store/cart/CartCtx';
+import ProductReviews from './ProductReviews';
 
 const ProductDetail = () => {
   const { productId } = useParams()
@@ -22,7 +23,8 @@ const ProductDetail = () => {
         size:0,
         stock:0
       }
-    ]
+    ],
+    reviews:[]
   })
   const [currentSize, setCurrentSize] = useState(
     {
@@ -194,36 +196,7 @@ for(let i=1; i<=20&& i<=currentSize.stock; i++) quantityArray.push(i);
       </Col>
     </Row>
     <br className='border border-1 border-[#000]'/>
-    <Row>
-      <Col span={8}>
-        <div className='flex flex-col items-end justify-start w-full gap-1 ml-7 mb-7'>
-          <Card style={{ width: 300 }}>
-            <h3 className='text-[24px]'><span>0</span>/5</h3>
-            <div>
-              <Rate disabled defaultValue={5} />
-              <span className='inline-block ml-4 text-[18px]'>0</span>
-            </div>
-            <div>
-              <Rate disabled defaultValue={4} />
-              <span className='inline-block ml-4 text-[18px]'>0</span>
-            </div> 
-            <div>
-              <Rate disabled defaultValue={3} />
-              <span className='inline-block ml-4 text-[18px]'>0</span>
-            </div>
-            <div>
-              <Rate disabled defaultValue={2} />
-              <span className='inline-block ml-4 text-[18px]'>0</span>
-            </div>
-            <div>
-              <Rate disabled defaultValue={1} />
-              <span className='inline-block ml-4 text-[18px]'>0</span>
-            </div>      
-          </Card>
-        </div>
-      </Col>
-      <Col span={16}>Đánh giá</Col>
-    </Row>
+    <ProductReviews productId={currentProduct._id||''}/>
     </> }
 </LayoutComponent>
   )

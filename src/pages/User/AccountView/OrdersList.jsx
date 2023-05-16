@@ -3,7 +3,7 @@ import LayoutComponent from '../../../layout/Layout'
 import AuthContext from '../../../store/authCtx'
 import AccountNav from '../AccountNav'
 import { getAllOrders } from '../../../api/orderAPI'
-import { Descriptions, Space, Table, Tag } from 'antd'
+import { Descriptions,  Table, Tag } from 'antd'
 import { Link } from 'react-router-dom'
 
 const OrdersList = () => {

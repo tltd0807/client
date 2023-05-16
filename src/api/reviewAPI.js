@@ -25,11 +25,11 @@ export const createReview = async (token, productId, data) => {
 };
 
 // admin only
-export const approveReview = async (token, productId, reviewId) => {
+export const approveReview = async (token, productId, reviewId, isApproved) => {
   const res = await axios.patch(
     `${APP_BASE_URL}/api/v1/products/${productId}/reviews/${reviewId}`,
     {
-      isApproved: true,
+      isApproved: isApproved,
     },
     {
       headers: { Authorization: `${token}` },

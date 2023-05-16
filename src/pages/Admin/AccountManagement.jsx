@@ -41,30 +41,29 @@ const AccountManagement = () => {
   return (
     <div className=' w-full'>
     
-        <Table dataSource={users} rowKey={(record)=>record._id}   pagination={{
-      pageSize: 10,
-    }}>
+        <Table dataSource={users} rowKey={(record)=>record._id}   
+        pagination={{pageSize: 10,}}>
         <Column title="Hình đại diện" dataIndex="photo" key="photo" render={photo=> <Avatar src={photo}/>
         }/>
         <ColumnGroup title="Họ Và Tên">
-      <Column title="Tên" dataIndex="firstName" key="firstName" />
-      <Column title="Họ" dataIndex="lastName" key="lastName" />
-    </ColumnGroup>
-    <Column title="Email" dataIndex="email" key="email" />
-    <Column title="Vai trò" dataIndex="role" key="role" />
-    <Column title="Trạng thái" dataIndex="isLocked" key="isLocked" render={isLocked=>isLocked===false?<Tag color="success">Hoạt động</Tag>:<Tag color="error">Đã Khóa</Tag>}  filters={[
-      {
-        text: 'Hoạt động',
-        value: false,
-      },
-      {
-        text: 'Đã Khóa',
-        value: true,
-      },]}
-      onFilter={ (value, record) => record.isLocked === value}
-    filtered={true}
-      />
-    <Column title="Khóa" dataIndex="isLocked" key="isLocked" render={(isLocked, record, index)=><Switch defaultChecked={!isLocked} onChange={()=>onChange(isLocked,record)} disabled={record.role==='admin'} />} />
+          <Column title="Tên" dataIndex="firstName" key="firstName" />
+          <Column title="Họ" dataIndex="lastName" key="lastName" />
+        </ColumnGroup>
+        <Column title="Email" dataIndex="email" key="email" />
+        <Column title="Vai trò" dataIndex="role" key="role" />
+        <Column title="Trạng thái" dataIndex="isLocked" key="isLocked" render={isLocked=>isLocked===false?<Tag color="success">Hoạt động</Tag>:<Tag color="error">Đã Khóa</Tag>}  filters={[
+          {
+            text: 'Hoạt động',
+            value: false,
+          },
+          {
+            text: 'Đã Khóa',
+            value: true,
+          },]}
+          onFilter={ (value, record) => record.isLocked === value}
+          filtered={true}
+          />
+        <Column title="Khóa" dataIndex="isLocked" key="isLocked" render={(isLocked, record, index)=><Switch defaultChecked={!isLocked} onChange={()=>onChange(isLocked,record)} disabled={record.role==='admin'} />} />
 
         </Table>
     </div>

@@ -5,6 +5,7 @@ import { deleteProduct, getAllCategory, getAllProducts, updateProduct } from '..
 import UpdateProductForm from '../ProductForm/UpdateProductForm';
 import AuthContext from '../../../store/authCtx';
 import Highlighter from 'react-highlight-words';
+import ExpendedProductReviewTable from './ExpendedProductReviewTable';
 const { confirm } = Modal;
 const success = (mes) => {
   Modal.success({
@@ -390,32 +391,34 @@ const columns = [
     expandable={{
       expandedRowRender: (record) => (
         // Thêm reviews table ở đây được
-        <div
-          style={{
-            margin: 0
-          }}
-        >
+        <>
+          <div
+            style={{
+              margin: 0
+            }}
+          >
             <p className='font-bold'>Mô tả: </p>
-          {record.description.split('\\n').map((text,index)=><p key={index}>{text}</p>)}
-          {/* Hình ở đây */}
-          <div className='flex space-x-5'>
-            <div>
-            <p className='font-bold'>Hình cover: </p>
-          <Image
-    width={100}
-    src={record.imageCover}
-  />
+            {record.description.split('\\n').map((text, index) => <p key={index}>{text}</p>)}
+            {/* Hình ở đây */}
+            <div className='flex space-x-5'>
+              <div>
+                <p className='font-bold'>Hình cover: </p>
+                <Image
+                  width={100}
+                  src={record.imageCover} />
+              </div>
+              <div>
+                <p className='font-bold'>Hình chi tiết: </p>
+                {record.images.map((image, index) => (<Image
+                  key={index}
+                  width={100}
+                  src={image} />))}
+              </div>
             </div>
-           <div>
-           <p className='font-bold'>Hình chi tiết: </p>
-           {record.images.map((image,index)=>(<Image
-           key={index}
-    width={100}
-    src={image}
-  />))}
-           </div>
-  </div>
-        </div>
+          </div>
+          <p className='font-bold'>Các bình luận về sản phẩm </p>
+          <ExpendedProductReviewTable productId={record.id}/>
+          </>
       )
     }}
   />
