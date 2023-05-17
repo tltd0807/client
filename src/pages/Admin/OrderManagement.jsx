@@ -32,12 +32,26 @@ const OrderManagement = () => {
       title: 'Ngày tạo',
       dataIndex: 'createdAt',
       key: 'createdAt',
+      defaultSortOrder: 'descend',
+      sorter: (a, b) =>(new Date(a.createdAt))-(new Date(b.createdAt)),
       render:(_,record)=>(<p>{(new Date(record.createdAt)).toLocaleString('en-GB')}</p>)
     },      
     {
       title: 'Phương thức thanh toán',
       dataIndex: 'paymentMethod',
-      key: 'paymentMethod',
+      key: 'paymentMethod',     
+       filters: [
+        {
+          text: 'COD',
+          value: 'COD',
+        },
+        {
+          text: 'PayPal',
+          value: 'PayPal',
+        },
+       
+      ],
+      onFilter: (value, record) => record.paymentMethod===value,
     },     
     {
       title: 'Tổng cộng',
@@ -50,7 +64,26 @@ const OrderManagement = () => {
       title: 'Trạng thái',
       dataIndex: 'orderStatus',
       key: 'orderStatus',
-      render:(_,record)=>(<Tag color={record.orderStatus==='done'?"green":record.orderStatus==='fail'?"red":record.orderStatus==='processing'?'blue':"orange"}>{record.orderStatus==='new'?'Chờ xác nhận':record.orderStatus==='processing'?"Dang xử lý":record.orderStatus==='done'?"Hoàn thành":"Đã hủy"}</Tag>)
+      render:(_,record)=>(<Tag color={record.orderStatus==='done'?"green":record.orderStatus==='fail'?"red":record.orderStatus==='processing'?'blue':"orange"}>{record.orderStatus==='new'?'Chờ xác nhận':record.orderStatus==='processing'?"Đang xử lý":record.orderStatus==='done'?"Hoàn thành":"Đã hủy"}</Tag>),
+      filters: [
+        {
+          text: 'Chờ xác nhận',
+          value: 'new',
+        },
+        {
+          text: 'Đang xử lý',
+          value: 'processing',
+        },
+        {
+          text: 'Hoàn thành',
+          value: 'done',
+        },
+        {
+          text: 'Đã hủy',
+          value: 'fail',
+        },
+      ],
+      onFilter: (value, record) => record.orderStatus===value,
     }, 
     {
       title: 'Cập nhật trạng thái',
