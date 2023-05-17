@@ -1,60 +1,119 @@
 import React, { useContext, useEffect, useState } from 'react'
 import AuthContext from '../../store/authCtx'
-import { getAllOrdersAdmin } from '../../api/orderAPI';
+import { acceptOrder, completeOrder, deleteOrder, getAllOrdersAdmin } from '../../api/orderAPI';
 import { Button, Table, Tag } from 'antd';
 import ExpendedOrderTable from '../Order/ExpendedOrderTable';
-const columns=[
-  {
-    title: 'Email',
-    dataIndex: 'email',
-    key: 'email',
-    render:(_,record)=>(<p>{record.user.email}</p>)
-  },     
-  {
-    title: 'Ngày tạo',
-    dataIndex: 'createdAt',
-    key: 'createdAt',
-    render:(_,record)=>(<p>{(new Date(record.createdAt)).toLocaleString('en-GB')}</p>)
-  },      
-  {
-    title: 'Phương thức thanh toán',
-    dataIndex: 'paymentMethod',
-    key: 'paymentMethod',
-  },     
-  {
-    title: 'Tổng cộng',
-    dataIndex: 'totalPrice',
-    key: 'totalPrice',
-    render:(_,record)=>(<p>{(record.totalPrice+record.shippingPrice-(record.voucher?record.voucher.discount:0)).toLocaleString('vi', {style : 'currency', currency : 'VND'})}</p>)
+import OrderUpdateStatusForm from '../Order/OrderUpdateStatusForm';
 
-  },     
-  {
-    title: 'Trạng thái',
-    dataIndex: 'orderStatus',
-    key: 'orderStatus',
-    render:(_,record)=>(<Tag color={record.orderStatus==='done'?"green":record.orderStatus==='fail'?"red":record.orderStatus==='processing'?'blue':"orange"}>{record.orderStatus==='new'?'Chờ xác nhận':record.orderStatus==='processing'?"Dang xử lý":record.orderStatus==='done'?"Hoàn thành":"Đã hủy"}</Tag>)
-  }, 
-  {
-    title: 'Cập nhật trạng thái',
-    key: 'updateStatus',
-    render: (_, record) => <Button>Cập nhật</Button>,
-  },
-]
 const OrderManagement = () => {
   const authCtx=useContext(AuthContext);
   const [orders, setOrders] = useState([]);
+  const [open, setOpen] = useState(false);
+  const [reload, setReload] = useState(true)
+  const [order, setOrder] = useState({})
   useEffect(() => {
     getAllOrdersAdmin(authCtx.token).then(res=>{
       setOrders(res.data.data.sort((a,b)=>a.createdAt>b.createdAt?-1:0))
-      console.log(res.data.data)
+      // console.log(res.data.data)
     }).catch(err=>{
       console.log(err.response.data)
       window.alert(err.response.data.message)
     })
-  }, [])
+  }, [reload])
+
+  const columns=[
+    {
+      title: 'Email',
+      dataIndex: 'email',
+      key: 'email',
+      render:(_,record)=>(<p>{record.user.email}</p>)
+    },     
+    {
+      title: 'Ngày tạo',
+      dataIndex: 'createdAt',
+      key: 'createdAt',
+      render:(_,record)=>(<p>{(new Date(record.createdAt)).toLocaleString('en-GB')}</p>)
+    },      
+    {
+      title: 'Phương thức thanh toán',
+      dataIndex: 'paymentMethod',
+      key: 'paymentMethod',
+    },     
+    {
+      title: 'Tổng cộng',
+      dataIndex: 'totalPrice',
+      key: 'totalPrice',
+      render:(_,record)=>(<p>{(record.totalPrice+record.shippingPrice-(record.voucher?record.voucher.discount:0)).toLocaleString('vi', {style : 'currency', currency : 'VND'})}</p>)
   
+    },     
+    {
+      title: 'Trạng thái',
+      dataIndex: 'orderStatus',
+      key: 'orderStatus',
+      render:(_,record)=>(<Tag color={record.orderStatus==='done'?"green":record.orderStatus==='fail'?"red":record.orderStatus==='processing'?'blue':"orange"}>{record.orderStatus==='new'?'Chờ xác nhận':record.orderStatus==='processing'?"Dang xử lý":record.orderStatus==='done'?"Hoàn thành":"Đã hủy"}</Tag>)
+    }, 
+    {
+      title: 'Cập nhật trạng thái',
+      key: 'updateStatus',
+      render: (_, record) => <Button
+      onClick={() => {
+        setOpen(true);
+        setOrder(record)
+      }}
+    >
+      Cập nhật
+    </Button>,
+    },
+  ]
+  const onCreate = (values) => {
+    console.log('Received values of form: ', values);
+    console.log('order: ', order._id);
+    if(!values.orderStatus||values.orderStatus===order.orderStatus) {
+      setOpen(false);
+      return;
+    }
+    if(values.orderStatus==='processing'){
+      acceptOrder(authCtx.token,order._id).then(res=>{
+        window.alert("Chấp nhận thành công");
+        setReload(old=>!old);
+        setOpen(false);
+      }).catch(err=>{
+        console.log(err.response.data);
+        setOpen(false);
+        window.alert("Chấp nhận thất bại");
+      })
+    }else if(values.orderStatus==='done'){
+      completeOrder(authCtx.token,order._id).then(res=>{
+        window.alert("Hoàn thành thành công");
+        setOpen(false);
+        setReload(old=>!old);
+      }).catch(err=>{
+        console.log(err.response.data);
+        setOpen(false);
+        window.alert("Hoàn thành thất bại");
+      })
+    }else{
+      deleteOrder(authCtx.token,order._id).then(res=>{
+        window.alert("Hủy thành công");
+        setOpen(false);
+        setReload(old=>!old);
+      }).catch(err=>{
+        console.log(err.response.data);
+        setOpen(false);
+        window.alert("Hủy thất bại");
+      })
+    }
+  };
   return (
     <section>
+      <OrderUpdateStatusForm
+        open={open}
+        onCreate={onCreate}
+        onCancel={() => {
+          setOpen(false);
+        }}
+        order={order}
+      />
       <h2 className='text-[24px] my-6 font-bold'>Danh sách đơn hàng</h2>
       <Table columns={columns} dataSource={orders} bordered rowKey={record=>record._id}
        expandable={{
