@@ -21,10 +21,10 @@ const OrderDetail = () => {
         setLoading(false)
       }).catch(err=>{setLoading(false);console.log(err.response.data.message)})
     }, [])
-    const tagColor=order.orderStatus==='done'?"green":order.orderStatus==='fail'?"red":"blue";
+    const tagColor=order.orderStatus==='done'?"green":order.orderStatus==='fail'?"red":order.orderStatus==='processing'?"blue":"orange";
     const tagContent=order.orderStatus==='done'?"Hoàn tất":order.orderStatus==='fail'?"Đã hủy":order.orderStatus==='processing'?"Đang xử lý":"Chờ xác nhận";
 
-    const total=order.orderItems?order.orderItems.reduce((total,item)=>total+item.quantity*item.product.price*(1-item.product.discount/100),0):0+order.shippingPrice-order.voucher?order.voucher.discount:0
+    const total=order.orderItems?(order.orderItems.reduce((total, item)=>total+item.price*item.quantity,0) +order.shippingPrice-(order.voucher?order.voucher.discount:0)):0
     let paymentMethod='';
     if(order.paymentMethod){
       if(order.paymentMethod==='COD'){paymentMethod="Thanh toán bằng tiền mặt khi nhận hàng"}else{paymentMethod="Thanh toán bằng Paypal"}

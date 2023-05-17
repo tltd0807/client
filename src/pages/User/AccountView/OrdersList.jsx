@@ -8,6 +8,7 @@ import { Link } from 'react-router-dom'
 
 const OrdersList = () => {
     const authCtx= useContext(AuthContext)
+    const [loading, setLoading] = useState(true)
     const [orders, setOrders] = useState([{
         _id:'',
         address:{fullName:'',city:''},
@@ -25,6 +26,7 @@ const OrdersList = () => {
     useEffect(() => {
         getAllOrders(authCtx.token).then(res=>{
             // console.log(res.data.data)
+            setLoading(false)
             setOrders(res.data.data)
         }).catch(err=>{
             console.log(err.response.data.message)
@@ -32,17 +34,14 @@ const OrdersList = () => {
     }, [])
     const dataSource =[];
     orders.sort((a,b)=>a.createdAt>b.createdAt?-1:0).forEach((item, index)=>{
-        let voucherDiscount=0;
-        if(item.voucher)voucherDiscount=item.voucher.discount;
-        const total=(item.orderItems.reduce((total, item)=>total+Math.round((item.price*(1-item.product.discount/100)/1000)*1000*item.quantity),0)-voucherDiscount+(item.address.city==="Thành phố Hồ Chí Minh"?20000:item.address.city===""?0:40000)).toLocaleString('vi', {style : 'currency', currency : 'VND'})
-
+        const total=item.orderItems?(item.orderItems.reduce((total, item)=>total+item.price*item.quantity,0) +item.shippingPrice-(item.voucher?item.voucher.discount:0)):0
         dataSource.push({
             _id: item._id,
             key: index,
             name:item.address.fullName,
             buyDate:(new Date(item.createdAt)).toLocaleString('en-GB', { timeZone: 'UTC' }),
     
-            total: total,
+            total: total.toLocaleString('vi', {style : 'currency', currency : 'VND'}),
             status: item.orderStatus
         })
     })
@@ -130,7 +129,7 @@ const OrdersList = () => {
       </Descriptions>
         </div>
         <div className=''>
-            <Table dataSource={dataSource} columns={columns} pagination={{pageSize: 10}}/>
+            <Table dataSource={dataSource} columns={columns} pagination={{pageSize: 10}} loading={loading}/>
         </div>
       </section>
       </main>

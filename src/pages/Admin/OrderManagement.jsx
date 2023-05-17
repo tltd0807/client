@@ -1,32 +1,38 @@
 import React, { useContext, useEffect, useState } from 'react'
 import AuthContext from '../../store/authCtx'
 import { getAllOrdersAdmin } from '../../api/orderAPI';
-import { Button, Table } from 'antd';
+import { Button, Table, Tag } from 'antd';
+import ExpendedOrderTable from '../Order/ExpendedOrderTable';
 const columns=[
   {
     title: 'Email',
     dataIndex: 'email',
     key: 'email',
+    render:(_,record)=>(<p>{record.user.email}</p>)
   },     
   {
     title: 'Ngày tạo',
     dataIndex: 'createdAt',
     key: 'createdAt',
+    render:(_,record)=>(<p>{(new Date(record.createdAt)).toLocaleString('en-GB')}</p>)
   },      
   {
     title: 'Phương thức thanh toán',
-    dataIndex: 'PaymentMethod',
-    key: 'PaymentMethod',
+    dataIndex: 'paymentMethod',
+    key: 'paymentMethod',
   },     
   {
     title: 'Tổng cộng',
     dataIndex: 'totalPrice',
     key: 'totalPrice',
+    render:(_,record)=>(<p>{(record.totalPrice+record.shippingPrice-(record.voucher?record.voucher.discount:0)).toLocaleString('vi', {style : 'currency', currency : 'VND'})}</p>)
+
   },     
   {
     title: 'Trạng thái',
     dataIndex: 'orderStatus',
     key: 'orderStatus',
+    render:(_,record)=>(<Tag color={record.orderStatus==='done'?"green":record.orderStatus==='fail'?"red":record.orderStatus==='processing'?'blue':"orange"}>{record.orderStatus==='new'?'Chờ xác nhận':record.orderStatus==='processing'?"Dang xử lý":record.orderStatus==='done'?"Hoàn thành":"Đã hủy"}</Tag>)
   }, 
   {
     title: 'Cập nhật trạng thái',
@@ -50,7 +56,10 @@ const OrderManagement = () => {
   return (
     <section>
       <h2 className='text-[24px] my-6 font-bold'>Danh sách đơn hàng</h2>
-      <Table columns={columns} bordered/>
+      <Table columns={columns} dataSource={orders} bordered rowKey={record=>record._id}
+       expandable={{
+        expandedRowRender: (record) => (<ExpendedOrderTable order={record}/>)}}
+      />
     </section>
   )
 }
