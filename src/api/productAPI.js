@@ -1,10 +1,10 @@
 import axios from "axios";
 import { APP_BASE_URL } from "./../configs/constants";
 
-export const getAllProducts = async () => {
+export const getAllProducts = async (limit, page) => {
   const res = await axios.get(
     // `${APP_BASE_URL}/api/v1/products?fields=name,price,discount,imageCover,color,gender`
-    `${APP_BASE_URL}/api/v1/products`
+    `${APP_BASE_URL}/api/v1/products?limit=${limit || 1000}&page=${page || 1}`
   );
   return res.data;
 };

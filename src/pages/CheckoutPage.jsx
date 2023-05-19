@@ -151,8 +151,8 @@ const onApprovePayPal=(data, actions) => {
   });
 }
 const onError=(err)=>{
-  // console.log(err)
-  window.alert(err);
+  console.log(err)
+  window.alert("Thanh toán thất bại vui lòng thử lại sau");
 }
   return (
     <LayoutComponent>

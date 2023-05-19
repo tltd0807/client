@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import LayoutComponent from '../../layout/Layout'
 import { getAllCategory, getAllProducts } from '../../api/productAPI'
 import ProductItem from './ProductItem'
-import {  Popover, Select, Slider, Spin } from 'antd';
+import {  Pagination, Popover, Select, Slider, Spin } from 'antd';
 const formatter = (value) => value.toLocaleString('vi', {style : 'currency', currency : 'VND'});
 const ProductPage = () => {
 const [products, setProducts] = useState([])
@@ -11,20 +11,27 @@ const [loading, setLoading] = useState(true)
 const [sortBy, setSortBy] = useState('newest')
 const [filterCategory, setFilterCategory] = useState('all')
 const [rangePrice, setRangePrice] = useState([0,2000000])
-
+// const [totalItems, setTotalItems] = useState(0);
+// const [current, setCurrent] = useState(1);
 useEffect(() => {
     getAllProducts().then(res=>{
         setProducts(res.data.data)
-        // console.log(res)
+        console.log(res)
+        // setTotalItems(res.totalPage*res.result)
         setLoading(false)
     }).catch(err=>{
         console.log(err.response)
     })
-    getAllCategory().then(res=>{
-        setCategory(res.data.data)
-      }).catch(err=>{
-        console.log(err)
-      })
+    if(category.length===0){
+        // console.log("category.length===0")
+        getAllCategory().then(res=>{
+            setCategory(res.data.data)
+        }).catch(err=>{
+            console.log(err)
+        })
+    }
+
+// eslint-disable-next-line react-hooks/exhaustive-deps
 }, [])
 const categoryOpt=[{value:'all', label:"Tất cả" }];
 for(let i=0; i<category.length;i++){
@@ -121,6 +128,15 @@ const onAfterChange = (value) => {
             <div className='flex flex-wrap justify-center max-w-[100%] gap-4 gap-y-10 mt-10'>
                 {products.length!==0&&sorted.filter(product=>Math.round((product.price*(1-product.discount/100)/1000)*1000)>=rangePrice[0]&&Math.round((product.price*(1-product.discount/100)/1000)*1000)<=rangePrice[1]).map(product=>(<ProductItem product={product} key={product._id}/>)) }
             </div>
+            {/* <Pagination
+            defaultCurrent={current}
+            total={totalItems}
+            pageSize={3}
+            defaultPageSize={3}
+            onChange={(page, pageSize) => {
+              setCurrent(page);
+            }}
+          /> */}
             </>}
        
 
