@@ -4,7 +4,6 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 import { getAllProductsByDiscount, getAllProductsByGender } from '../../api/productAPI'
 import ProductItem from './ProductItem'
 import { Button, Popover, Slider, Spin } from 'antd'
-import ARROW from './../../assets/icon/ChevronDown.svg'
 const formatter = (value) => value.toLocaleString('vi', {style : 'currency', currency : 'VND'});
 const ProductCollection = () => {
     const [products, setProducts] = useState([])
@@ -49,7 +48,7 @@ const ProductCollection = () => {
       );
 
       let sorted =[...products];
-      console.log(sorted)
+    //   console.log(sorted)
 
       switch(sortBy){
         case 'priceUp':
@@ -72,18 +71,17 @@ const ProductCollection = () => {
             break;
         default: 
             break;
-
       }
   return (
     <LayoutComponent>
         {loading?<Spin size='large'/>:<> <h2 className='text-[32px] font-bold my-3 uppercase'>{type==='discount'?"Sản phẩm giá sốc":type==='male'?'Sản phẩm nam':'Sản phẩm nữ'}</h2>
-            <div className='h-10 ml-[74px] mr-[74px] flex justify-between'>
+            <div className='h-10  mx-[74px] flex justify-between'>
                 <div className='min-w-[400px]'>
                     <p className='font-bold'>Giá từ: {rangePrice[0].toLocaleString('vi', {style : 'currency', currency : 'VND'})} - {rangePrice[1].toLocaleString('vi', {style : 'currency', currency : 'VND'})}</p>
-                    <Slider range defaultValue={[0, 2000000]} max={2000000} step={50000} tooltip={{ formatter }} onAfterChange={onAfterChange} />
+                    <Slider range defaultValue={[0, 2000000]} max={2000000} step={25000} tooltip={{ formatter }} onAfterChange={onAfterChange} />
                 </div>
                 <div >
-                <Popover content={content} title="Title" trigger="hover" placement="bottomRight">
+                <Popover content={content} title="" trigger="hover" placement="bottomRight">
                     <div className='px-3 py-2 border flex w-[170px] justify-between hover:cursor-pointer'>
                     <p>Sắp xếp theo</p>
                     </div>
