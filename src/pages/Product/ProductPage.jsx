@@ -8,16 +8,17 @@ const ProductPage = () => {
 const [products, setProducts] = useState([])
 const [category, setCategory] = useState([])
 const [loading, setLoading] = useState(true)
-const [sortBy, setSortBy] = useState('newest')
+const [sortBy, setSortBy] = useState('createAt')
 const [filterCategory, setFilterCategory] = useState('all')
 const [rangePrice, setRangePrice] = useState([0,2000000])
-// const [totalItems, setTotalItems] = useState(0);
-// const [current, setCurrent] = useState(1);
+const [totalItems, setTotalItems] = useState(0);
+const [current, setCurrent] = useState(1);
 useEffect(() => {
-    getAllProducts().then(res=>{
+    getAllProducts(3,current,filterCategory,sortBy,rangePrice).then(res=>{
         setProducts(res.data.data)
-        console.log(res)
-        // setTotalItems(res.totalPage*res.result)
+        // console.log(res)
+        // res.totalPage*pageSize
+        setTotalItems(res.totalPage*3)
         setLoading(false)
     }).catch(err=>{
         console.log(err.response)
@@ -32,42 +33,11 @@ useEffect(() => {
     }
 
 // eslint-disable-next-line react-hooks/exhaustive-deps
-}, [])
+}, [current,filterCategory,sortBy,rangePrice[0],rangePrice[1]])
 const categoryOpt=[{value:'all', label:"Tất cả" }];
 for(let i=0; i<category.length;i++){
   categoryOpt.push({value:category[i]._id, label:category[i].name })
 }
-let sorted =[...products];
-    switch(filterCategory){
-        case 'all':
-            sorted =[...products]
-            break;
-        default:
-            sorted= [...products].filter(product=>product.category._id===filterCategory)
-            break;
-    }
-  switch(sortBy){
-    case 'priceUp':
-        sorted.sort((a, b) =>Math.round((a.price*(1-a.discount/100)/1000)*1000)-Math.round((b.price*(1-b.discount/100)/1000)*1000))
-        break;
-    case 'priceDown':
-        sorted.sort((a, b) =>Math.round((b.price*(1-b.discount/100)/1000)*1000)-Math.round((a.price*(1-a.discount/100)/1000)*1000))
-        break;
-    case 'az':
-        sorted.sort((a, b) =>a.name.localeCompare(b.name))
-        break;
-    case 'za':
-        sorted.sort((a, b) =>b.name.localeCompare(a.name))
-        break;
-    case 'oldest':
-        sorted.sort((a, b) =>Date.parse(a.createAt)-Date.parse(b.createAt))
-        break;
-    case 'newest':
-        sorted.sort((a, b) =>Date.parse(b.createAt)-Date.parse(a.createAt))
-        break;
-    default: 
-        break;
-  }
 const onSelectChangeHandler=(value)=>{
     // console.log("value recieved from select: ", value);
     if(!value){
@@ -80,18 +50,19 @@ const onSelectChangeHandler=(value)=>{
     
 }
 const onAfterChange = (value) => {
+    // console.log(value)
     setRangePrice(value)
   };
   const content = (
     <div>
-      <p className='hover:cursor-pointer hover:text-[#48cae4]' onClick={()=>setSortBy('priceUp')}>Giá tăng dần</p>
-      <p className='hover:cursor-pointer hover:text-[#48cae4]' onClick={()=>setSortBy('priceDown')}>Giá giảm dần</p>
+      <p className='hover:cursor-pointer hover:text-[#48cae4]' onClick={()=>setSortBy('price')}>Giá tăng dần</p>
+      <p className='hover:cursor-pointer hover:text-[#48cae4]' onClick={()=>setSortBy('-price')}>Giá giảm dần</p>
 
-      <p className='hover:cursor-pointer hover:text-[#48cae4]' onClick={()=>setSortBy('az')}>Tên: A-Z</p>
-      <p className='hover:cursor-pointer hover:text-[#48cae4]' onClick={()=>setSortBy('za')}>Tên: Z-A</p>
+      <p className='hover:cursor-pointer hover:text-[#48cae4]' onClick={()=>setSortBy('name')}>Tên: A-Z</p>
+      <p className='hover:cursor-pointer hover:text-[#48cae4]' onClick={()=>setSortBy('-name')}>Tên: Z-A</p>
 
-      <p className='hover:cursor-pointer hover:text-[#48cae4]' onClick={()=>setSortBy('oldest')}>Cũ nhất</p>
-      <p className='hover:cursor-pointer hover:text-[#48cae4]' onClick={()=>setSortBy('newest')}>Mới nhất</p>
+      <p className='hover:cursor-pointer hover:text-[#48cae4]' onClick={()=>setSortBy('createAt')}>Cũ nhất</p>
+      <p className='hover:cursor-pointer hover:text-[#48cae4]' onClick={()=>setSortBy('-createAt')}>Mới nhất</p>
     </div>
   );        
   return (
@@ -125,18 +96,20 @@ const onAfterChange = (value) => {
                 </Popover>
                 </div>
             </div>
+            {/* loading từ đây thôi */}
             <div className='flex flex-wrap justify-center max-w-[100%] gap-4 gap-y-10 mt-10'>
-                {products.length!==0&&sorted.filter(product=>Math.round((product.price*(1-product.discount/100)/1000)*1000)>=rangePrice[0]&&Math.round((product.price*(1-product.discount/100)/1000)*1000)<=rangePrice[1]).map(product=>(<ProductItem product={product} key={product._id}/>)) }
+                {products.length!==0?products.filter(product=>Math.round((product.price*(1-product.discount/100)/1000)*1000)>=rangePrice[0]&&Math.round((product.price*(1-product.discount/100)/1000)*1000)<=rangePrice[1]).map(product=>(<ProductItem product={product} key={product._id}/>)):<p>Không có sản phẩm</p> }
             </div>
-            {/* <Pagination
-            defaultCurrent={current}
-            total={totalItems}
-            pageSize={3}
-            defaultPageSize={3}
-            onChange={(page, pageSize) => {
-              setCurrent(page);
-            }}
-          /> */}
+            {products.length!==0&&<Pagination
+                defaultCurrent={current}
+                total={totalItems}
+                pageSize={3}
+                defaultPageSize={3}
+                onChange={(page, pageSize) => {
+                setCurrent(page);
+                }}
+            />}
+  
             </>}
        
 
