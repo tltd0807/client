@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useContext, useRef} from 'react'
 import { Button, Image, Input, Modal, Space, Table } from "antd";
 import { SearchOutlined,ExclamationCircleFilled } from '@ant-design/icons';
-import { deleteProduct, getAllCategory, getAllProducts, updateProduct } from '../../../api/productAPI';
+import { deleteProduct, getAllCategory, getAllProductAdmin,  updateProduct } from '../../../api/productAPI';
 import UpdateProductForm from '../ProductForm/UpdateProductForm';
 import AuthContext from '../../../store/authCtx';
 import Highlighter from 'react-highlight-words';
@@ -337,7 +337,7 @@ const columns = [
 ];
     // key= customeId+ size
     useEffect(() => {
-        getAllProducts().then(res=>{
+      getAllProductAdmin().then(res=>{
             // console.log(res.data.data)
             const processedData=[]
             res.data.data.forEach(product => {

@@ -3,7 +3,7 @@ import {  Link, useParams } from 'react-router-dom'
 import LayoutComponent from '../../layout/Layout'
 import { getOrderById } from '../../api/orderAPI'
 import AuthContext from '../../store/authCtx'
-import { Button, Card, Descriptions, Image,  Spin, Table, Tag } from 'antd'
+import { Button, Card, Descriptions, Image,  Spin, Table, Tag, notification } from 'antd'
 import AccountNav from '../User/AccountNav'
 import ReviewForm from './ReviewForm'
 import { createReview } from '../../api/reviewAPI'
@@ -14,12 +14,19 @@ const OrderDetail = () => {
     const [order, setOrder] = useState({})
     const [loading, setLoading] = useState(true)
     const [productId, setProductId] = useState('')
-    // console.log(order)
+    const [api, contextHolder] = notification.useNotification();
+    const openNotificationWithIcon = (type,message,description) => {
+      api[type]({
+        message: message,
+        description:description,
+      });
+    };
     useEffect(() => {
       getOrderById(authCtx.token, orderId).then(res=>{
         setOrder(res.data.data)
         setLoading(false)
       }).catch(err=>{setLoading(false);console.log(err.response.data.message)})
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
     const tagColor=order.orderStatus==='done'?"green":order.orderStatus==='fail'?"red":order.orderStatus==='processing'?"blue":"orange";
     const tagContent=order.orderStatus==='done'?"Hoàn tất":order.orderStatus==='fail'?"Đã hủy":order.orderStatus==='processing'?"Đang xử lý":"Chờ xác nhận";
@@ -119,23 +126,23 @@ const OrderDetail = () => {
       // console.log('Received values of form: ', values);
       createReview(authCtx.token, productId, values).then(res=>{
         // console.log(res.data.data);
-        window.alert('Đã đánh giá thành công, đánh giá của bạn sẽ được xét duyệt trước khi hiển thị')
+        openNotificationWithIcon('success',"Đã đánh giá thành công,","Đánh giá của bạn sẽ được xét duyệt trước khi hiển thị")
       }).catch(err=>{
-        // console.log(err);
-        window.alert(err.response.data.message)
+        openNotificationWithIcon('error',"Đánh giá thất bại",err.response.data.message)
       })
       setOpen(false);
     };
     return (
     <LayoutComponent>
-            <ReviewForm
-              open={open}
-              onCreate={onCreate}
-              productId={productId}
-              onCancel={() => {
-                setOpen(false);
-              }}
-            />
+      {contextHolder}
+      <ReviewForm
+        open={open}
+        onCreate={onCreate}
+        productId={productId}
+        onCancel={() => {
+          setOpen(false);
+        }}
+      />
       <main className='flex justify-center space-x-8'>
         <AccountNav userInfo={{
         firstName: authCtx.firstName,

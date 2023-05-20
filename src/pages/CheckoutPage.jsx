@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 import LayoutComponent from '../layout/Layout'
 import CartCtx from '../store/cart/CartCtx'
-import { Button, Image, Modal, Radio, Select, Space, Spin } from 'antd'
+import { Button, Image, Modal, Radio, Select, Space, Spin, notification } from 'antd'
 import { getAllVouchers } from '../api/discountAPI'
 import AuthContext from '../store/authCtx'
 import { deleteAddress, getCurrentUser } from '../api/userAPI'
@@ -43,6 +43,13 @@ const CheckoutPage = () => {
     "startDate": "",
     "expireDate": ""
 }) 
+const [api, contextHolder] = notification.useNotification();
+const openNotificationWithIcon = (type,message,description) => {
+  api[type]({
+    message: message,
+    description:description,
+  });
+};
 const { confirm } = Modal;
 // console.log(appliedVoucer)
   useEffect(() => {
@@ -52,6 +59,7 @@ const { confirm } = Modal;
     getCurrentUser(authCtx.token).then(res=>{
     setAddressArr(res.data.data.addresses)
   })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [reload])
   const vouchersOptions=vouchers.map(voucher=>{
     return {"label":`${voucher.name} (-${voucher.discount.toLocaleString('vi', {style : 'currency', currency : 'VND'})})`,"value":voucher.name}
@@ -120,15 +128,19 @@ const createOrderHandler=()=>{
       // console.log(data)
     createOrder(authCtx.token,data).then(res=>{
       setLoading(false)
-      window.alert("Đã tạo thành công")
+      openNotificationWithIcon('success',"Đã tạo thành công","")
       cartCtx.clearCart();
-      navigate(`/order/${res.data.data._id}`)
+      setTimeout(()=>{
+        navigate(`/order/${res.data.data._id}`)
+      },500)
   
   setLoading(false)
     }).catch(err=>{
-  console.log(err.response.data.message);
-  setLoading(false);
-   window.alert("Lỗi tạo order")})
+      console.log(err.response.data.message);
+      openNotificationWithIcon('error',"Tạo đơn hàng thất bại",err.response.data.message)
+      setLoading(false);
+  
+  })
 
 }
 const createOrderPayPal=(data, actions) => {
@@ -146,16 +158,20 @@ const onApprovePayPal=(data, actions) => {
   return actions.order.capture().then((details) => {
       const name = details.payer.name.given_name;
       // console.log(details)
-      window.alert(`Transaction completed by ${name}`);
+      openNotificationWithIcon('success',"Đã thanh toán thành công",`Transaction completed by ${name}`)
+    setTimeout(()=>{
       createOrderHandler();
+    },500)
   });
 }
 const onError=(err)=>{
   console.log(err)
-  window.alert("Thanh toán thất bại vui lòng thử lại sau");
+  openNotificationWithIcon('error',"Thanh toán thất bại vui lòng thử lại sau",err.response.data.message)
+
 }
   return (
     <LayoutComponent>
+      {contextHolder}
       {loading?<Spin size="large" />:
         <main className='flex justify-center space-x-3'>
             <section>

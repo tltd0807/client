@@ -12,10 +12,15 @@ export const getAllProducts = async (
     // `${APP_BASE_URL}/api/v1/products?fields=name,price,discount,imageCover,color,gender`
     `${APP_BASE_URL}/api/v1/products?limit=${limit || 1000}&page=${
       page || 1
-    }&sort=${sort}${
+    }&sort=${sort || "createAt"}${
       category && category !== "all" ? `&category=${category}` : ""
-    }&price[gte]=${rangePrice[0]}&price[lte]=${rangePrice[1]}`
+    }&price[gte]=${rangePrice[0] || 0}&price[lte]=${rangePrice[1] || 2000000}`
   );
+  return res.data;
+};
+
+export const getAllProductAdmin = async () => {
+  const res = await axios.get(`${APP_BASE_URL}/api/v1/products`);
   return res.data;
 };
 
@@ -30,9 +35,12 @@ export const getAllProductsByGender = async (
   const res = await axios.get(
     `${APP_BASE_URL}/api/v1/products?gender=${gender}&limit=${
       limit || 10000
-    }&page=${page || 1}&sort=${sort}${
+    }&page=${page || 1}&sort=${sort || "createAt"}${
       category && category !== "all" ? `&category=${category}` : ""
-    }&price[gte]=${rangePrice[0]}&price[lte]=${rangePrice[1]}`
+    }${
+      rangePrice &&
+      `&price[gte]=${rangePrice[0] || 0}&price[lte]=${rangePrice[1] || 2000000}`
+    }`
   );
   return res.data;
 };
@@ -43,14 +51,16 @@ export const getAllProductsByDiscount = async (
   category,
   sort,
   rangePrice
-  // rangePrice hidden nếu type= discount đi
 ) => {
   const res = await axios.get(
     `${APP_BASE_URL}/api/v1/products?limit=${limit || 10000}&page=${
       page || 1
     }&sort=${sort}${
       category && category !== "all" ? `&category=${category}` : ""
-    }&price[gte]=${rangePrice[0]}&price[lte]=${rangePrice[1]}&discount[gt]=0`
+    }${
+      rangePrice &&
+      `&price[gte]=${rangePrice[0] || 0}&price[lte]=${rangePrice[1] || 2000000}`
+    }`
   );
   return res.data;
 };

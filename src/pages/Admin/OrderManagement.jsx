@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 import AuthContext from '../../store/authCtx'
 import { acceptOrder, completeOrder, deleteOrder, getAllOrdersAdmin } from '../../api/orderAPI';
-import { Button, Table, Tag } from 'antd';
+import { Button, Table, Tag, notification } from 'antd';
 import ExpendedOrderTable from '../Order/ExpendedOrderTable';
 import OrderUpdateStatusForm from '../Order/OrderUpdateStatusForm';
 
@@ -11,14 +11,22 @@ const OrderManagement = () => {
   const [open, setOpen] = useState(false);
   const [reload, setReload] = useState(true)
   const [order, setOrder] = useState({})
+  const [api, contextHolder] = notification.useNotification();
+  const openNotificationWithIcon = (type,message,description) => {
+    api[type]({
+      message: message,
+      description:description,
+    });
+  };
   useEffect(() => {
     getAllOrdersAdmin(authCtx.token).then(res=>{
       setOrders(res.data.data.sort((a,b)=>a.createdAt>b.createdAt?-1:0))
       // console.log(res.data.data)
     }).catch(err=>{
       console.log(err.response.data)
-      window.alert(err.response.data.message)
+      openNotificationWithIcon('error',"Tải danh sách đơn hàng thất bại",err.response.data.message)
     })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [reload])
 
   const columns=[
@@ -107,38 +115,44 @@ const OrderManagement = () => {
     }
     if(values.orderStatus==='processing'){
       acceptOrder(authCtx.token,order._id).then(res=>{
-        window.alert("Chấp nhận thành công");
+        openNotificationWithIcon('success',"Chấp nhận đơn hàng thành công","")
         setReload(old=>!old);
         setOpen(false);
       }).catch(err=>{
         console.log(err.response.data);
         setOpen(false);
-        window.alert("Chấp nhận thất bại");
+        openNotificationWithIcon('error',"Chấp nhận đơn hàng thất bại",err.response.data.message)
+
       })
     }else if(values.orderStatus==='done'){
       completeOrder(authCtx.token,order._id).then(res=>{
-        window.alert("Hoàn thành thành công");
+        openNotificationWithIcon('success',"Hoàn thành đơn hàng thành công","")
+
         setOpen(false);
         setReload(old=>!old);
       }).catch(err=>{
         console.log(err.response.data);
         setOpen(false);
-        window.alert("Hoàn thành thất bại");
+        openNotificationWithIcon('error',"Hoàn thành đơn hàng thất bại",err.response.data.message)
+
       })
     }else{
       deleteOrder(authCtx.token,order._id).then(res=>{
-        window.alert("Hủy thành công");
+        openNotificationWithIcon('success',"Hủy đơn hàng thành công","")
+
         setOpen(false);
         setReload(old=>!old);
       }).catch(err=>{
         console.log(err.response.data);
         setOpen(false);
-        window.alert("Hủy thất bại");
+        openNotificationWithIcon('error',"Hủy đơn hàng thất bại",err.response.data.message)
+
       })
     }
   };
   return (
     <section>
+      {contextHolder}
       <OrderUpdateStatusForm
         open={open}
         onCreate={onCreate}

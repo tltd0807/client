@@ -13,11 +13,11 @@ const [maleProduct, setMaleProduct] = useState([]);
 const [femaleProduct, setFemaleProduct] = useState([])
 
 useEffect(() => {
-
   getAllProductsByGender('male',3).then(res=>{
+    // console.log(res)
   setMaleProduct(res.data.data);
   }).catch(err=>{
-    console.log(err.response.data.message)
+    console.log(err)
   })
   getAllProductsByGender('female',3).then(res=>{
   setFemaleProduct(res.data.data);

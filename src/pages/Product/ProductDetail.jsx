@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react'
 import LayoutComponent from '../../layout/Layout'
 import {  useParams } from 'react-router-dom';
-import { Col, Image, Row ,Badge, Select, Button,Rate, Card, Spin } from 'antd';
+import { Col, Image, Row ,Badge, Select, Button, Spin, notification } from 'antd';
 import { getAllProductsByNameAndGender, getProductById } from '../../api/productAPI';
 import CartCtx from '../../store/cart/CartCtx';
 import ProductReviews from './ProductReviews';
@@ -32,7 +32,13 @@ const ProductDetail = () => {
       stock:0
     }
   )
-// console.log(currentProduct)
+  const [api, contextHolder] = notification.useNotification();
+  const openNotificationWithIcon = (type,message,description) => {
+    api[type]({
+      message: message,
+      description:description,
+    });
+  };
 
   useEffect(() => {
     getProductById(productId).then(res=>{
@@ -57,6 +63,7 @@ const ProductDetail = () => {
     }).catch(err=>console.log(err))
 
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   const handleChange = (value) => {
     setQuantity(value);
@@ -70,7 +77,7 @@ const ProductDetail = () => {
       const {stock: stockOfSize}= product.inventory.find(item=>item.size===size)
 
       if (stockOfSize < newQuantity) {
-        window.alert('Sorry. Product is out of stock');
+        openNotificationWithIcon('error',"Sản phẩm hết hàng","Vui lòng loại bỏ khỏi giỏ hàng")
         return;
       }
       cartCtx.addToCart({
@@ -90,6 +97,7 @@ for(let i=1; i<=20&& i<=currentSize.stock; i++) quantityArray.push(i);
 
   return (
     <LayoutComponent>
+      {contextHolder}
       {loading?<Spin size='large'/>:
     <>
     <Row className=''>

@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { Switch, Table } from 'antd';
+import { Switch, Table, notification } from 'antd';
 import { approveReview, getAllReviews } from '../../../api/reviewAPI';
 import AuthContext from '../../../store/authCtx';
 
@@ -8,15 +8,23 @@ const ExpendedProductReviewTable =  ({productId}) => {
     const [productReviews, setProductReviews] = useState([]);
     const [loading, setLoading] = useState(true)
     const [reload, setReload] = useState(true)
-    // console.log(productReviews)
+    const [api, contextHolder] = notification.useNotification();
+    const openNotificationWithIcon = (type,message,description) => {
+      api[type]({
+        message: message,
+        description:description,
+      });
+    };
+  
     useEffect(() => {
         getAllReviews(authCtx.token,productId).then(res=>{
             setProductReviews(res.data.data);
             setLoading(false)
         }).catch(err=>{
-            window.alert(err.response.data.message)
+          openNotificationWithIcon('error',"Tải đánh giá sản phẩm thất bại",err.response.data.message)
         })
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [reload])
     
   
@@ -40,11 +48,12 @@ const ExpendedProductReviewTable =  ({productId}) => {
         // console.log(res.data.data);
         setLoading(false)
         setReload(old=>!old)
-        window.alert('Thành công')
+        openNotificationWithIcon('success',"Phê duyệt đánh giá sản phẩm thành công,","")
       }).catch(err=>{
         console.log(err.response.data.message);
         setLoading(false)
-        window.alert('Thất bại')
+        openNotificationWithIcon('error',"Phê duyệt đánh giá sản phẩm thất bại",err.response.data.message)
+
       })
     }
     const columns = [
@@ -79,6 +88,9 @@ const ExpendedProductReviewTable =  ({productId}) => {
         render: (_, record) => <Switch  checked={record.isApproved} onClick={()=>onSwtichHandler(record)}/>,
       },
     ];
-    return <Table columns={columns} dataSource={data}  loading={loading} bordered/>;
+    return<>
+    {contextHolder}
+    <Table columns={columns} dataSource={data}  loading={loading} bordered/>;
+    </>
   };
 export default ExpendedProductReviewTable

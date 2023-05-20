@@ -1,10 +1,8 @@
-import React, { useContext, useState } from 'react'
-import AuthContext from '../../store/authCtx';
+import React, {  useState } from 'react'
 import CreateProduct from '../Product/CreateProduct';
 import ProductTable from '../Product/ProductTable/ProductTable';
 
 const ProductManagement = () => {
-  const authCtx= useContext(AuthContext);
 const [reload, setReload] = useState(false)
 
 
