@@ -19,18 +19,38 @@ export const getAllProducts = async (
   return res.data;
 };
 
-export const getAllProductsByGender = async (gender, limit) => {
+export const getAllProductsByGender = async (
+  gender,
+  limit,
+  page,
+  category,
+  sort,
+  rangePrice
+) => {
   const res = await axios.get(
-    `${APP_BASE_URL}/api/v1/products?gender=${gender}&limit=${limit || 10000}`
+    `${APP_BASE_URL}/api/v1/products?gender=${gender}&limit=${
+      limit || 10000
+    }&page=${page || 1}&sort=${sort}${
+      category && category !== "all" ? `&category=${category}` : ""
+    }&price[gte]=${rangePrice[0]}&price[lte]=${rangePrice[1]}`
   );
   return res.data;
 };
 // api/v1/products?limit=3&sort=-discount
-export const getAllProductsByDiscount = async (limit) => {
+export const getAllProductsByDiscount = async (
+  limit,
+  page,
+  category,
+  sort,
+  rangePrice
+  // rangePrice hidden nếu type= discount đi
+) => {
   const res = await axios.get(
-    `${APP_BASE_URL}/api/v1/products?limit=${
-      limit || 10000
-    }&sort=-discount&discount[gt]=0`
+    `${APP_BASE_URL}/api/v1/products?limit=${limit || 10000}&page=${
+      page || 1
+    }&sort=${sort}${
+      category && category !== "all" ? `&category=${category}` : ""
+    }&price[gte]=${rangePrice[0]}&price[lte]=${rangePrice[1]}&discount[gt]=0`
   );
   return res.data;
 };

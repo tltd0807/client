@@ -3,6 +3,7 @@ import LayoutComponent from '../../layout/Layout'
 import { getAllCategory, getAllProducts } from '../../api/productAPI'
 import ProductItem from './ProductItem'
 import {  Pagination, Popover, Select, Slider, Spin } from 'antd';
+import { pageSize } from '../../configs/constants';
 const formatter = (value) => value.toLocaleString('vi', {style : 'currency', currency : 'VND'});
 const ProductPage = () => {
 const [products, setProducts] = useState([])
@@ -14,15 +15,6 @@ const [rangePrice, setRangePrice] = useState([0,2000000])
 const [totalItems, setTotalItems] = useState(0);
 const [current, setCurrent] = useState(1);
 useEffect(() => {
-    getAllProducts(3,current,filterCategory,sortBy,rangePrice).then(res=>{
-        setProducts(res.data.data)
-        // console.log(res)
-        // res.totalPage*pageSize
-        setTotalItems(res.totalPage*3)
-        setLoading(false)
-    }).catch(err=>{
-        console.log(err.response)
-    })
     if(category.length===0){
         // console.log("category.length===0")
         getAllCategory().then(res=>{
@@ -31,6 +23,17 @@ useEffect(() => {
             console.log(err)
         })
     }
+    setLoading(true)
+    getAllProducts(pageSize,current,filterCategory,sortBy,rangePrice).then(res=>{
+        setProducts(res.data.data)
+        // console.log(res)
+        // res.totalPage*pageSize
+        setTotalItems(res.totalPage*pageSize)
+        setLoading(false)
+    }).catch(err=>{
+        console.log(err.response)
+    })
+
 
 // eslint-disable-next-line react-hooks/exhaustive-deps
 }, [current,filterCategory,sortBy,rangePrice[0],rangePrice[1]])
@@ -43,8 +46,10 @@ const onSelectChangeHandler=(value)=>{
     if(!value){
         return
     }else if(value==='all'){
+        setCurrent(1)
         setFilterCategory('all')
     }else{
+        setCurrent(1)
         setFilterCategory(value)
     }
     
@@ -67,7 +72,8 @@ const onAfterChange = (value) => {
   );        
   return (
     <LayoutComponent>
-        {loading?<Spin size='large'/>:<> <div className='min-h-[300px] bg-[#03045e] flex justify-center items-center w-full'>
+        <> 
+        <div className='min-h-[300px] bg-[#03045e] flex justify-center items-center w-full'>
             <h1 className=' bg-[#90e0ef] w-full py-7 text-5xl text-[#0077b6] font-bold'>Chào mừng hãy tìm đôi giày phù hợp bạn</h1>
         </div>
     
@@ -97,20 +103,21 @@ const onAfterChange = (value) => {
                 </div>
             </div>
             {/* loading từ đây thôi */}
-            <div className='flex flex-wrap justify-center max-w-[100%] gap-4 gap-y-10 mt-10'>
+            {loading?<Spin size='large'/>:<>            
+            <div className='flex flex-wrap justify-center max-w-[100%] gap-4 gap-y-10 my-10'>
                 {products.length!==0?products.filter(product=>Math.round((product.price*(1-product.discount/100)/1000)*1000)>=rangePrice[0]&&Math.round((product.price*(1-product.discount/100)/1000)*1000)<=rangePrice[1]).map(product=>(<ProductItem product={product} key={product._id}/>)):<p>Không có sản phẩm</p> }
             </div>
             {products.length!==0&&<Pagination
                 defaultCurrent={current}
                 total={totalItems}
-                pageSize={3}
-                defaultPageSize={3}
+                pageSize={pageSize}
+                defaultPageSize={pageSize}
                 onChange={(page, pageSize) => {
                 setCurrent(page);
                 }}
-            />}
-  
-            </>}
+            />}</>}
+
+            </>
        
 
     </LayoutComponent>

@@ -6,3 +6,5 @@ export const filterObj = (obj, ...allowedFields) => {
   });
   return newObj;
 };
+
+export const pageSize = 3;
