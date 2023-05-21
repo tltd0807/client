@@ -99,9 +99,11 @@ export const deleteProduct = async (token, productId) => {
   return res.data;
 };
 
-export const getAllProductsByName = async (productName) => {
+export const getAllProductsByName = async (productName, limit, page) => {
   const res = await axios.get(
-    `${APP_BASE_URL}/api/v1/products?name=${productName}`
+    `${APP_BASE_URL}/api/v1/products?name=${productName}&limit=${
+      limit || 10000
+    }&page=${page || 1}`
   );
   return res.data;
 };

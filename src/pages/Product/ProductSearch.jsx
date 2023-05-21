@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import LayoutComponent from '../../layout/Layout';
-import {  Input } from 'antd';
+import {  Input, Pagination, Spin } from 'antd';
 import ProductItem from './ProductItem';
 import { getAllProductsByName } from '../../api/productAPI';
+import { pageSize } from '../../configs/constants';
 const { Search } = Input;
 
 const ProductSearch = () => {
@@ -11,21 +12,33 @@ const ProductSearch = () => {
     const navigate= useNavigate();
     const [searchParams, setSearchParams] = useSearchParams();
     const productName=searchParams.get("name")
+    const [loading, setLoading] = useState(true)
+    const [totalItems, setTotalItems] = useState(0);
+    const [current, setCurrent] = useState(1);
 useEffect(() => {
+    setLoading(true)
     if(!productName){
         setProducts([]);
+        setLoading(false)
         return;
     }
-    getAllProductsByName(productName).then(res=>{
+    getAllProductsByName(productName.trim(),pageSize,current).then(res=>{
         setProducts(res.data.data)
+        // setTotalItems(res.totalPage*pageSize)
+        setTotalItems(res.totalPage===1?res.result:res.totalPage*pageSize)
+        setLoading(false)
+
     }).catch(err=>{
         console.log(err.response.data.message)
+        setLoading(false)
+
     })
-}, [productName])
+}, [productName,current])
 
   return (
     <LayoutComponent>
-           <h2 className='text-[32px] font-bold my-3 uppercase'>Tìm kiếm </h2>
+        {loading?<Spin size='large'/>:<>
+        <h2 className='text-[32px] font-bold my-3 uppercase'>Tìm kiếm </h2>
            {products.length===0&&(<div className=' flex flex-col space-y-10 text-[24px] leading-10'>
             <div>
                 <p>Rất tiếc, chúng tôi không tìm thấy kết quả cho từ khóa của bạn</p>
@@ -39,10 +52,20 @@ useEffect(() => {
             </div>
             
             </div>)}
-            {productName&&<p className='text-[24px]'>Có <span className='font-bold'>{products.length}</span>  sản phẩm</p>}
+            {productName&&<p className='text-[24px]'>Có <span className='font-bold'>{totalItems}</span>  sản phẩm</p>}
             <div className='flex flex-wrap justify-center max-w-[100%] gap-4 gap-y-10 mt-10'>
                 {products.length!==0&&products.map(product=>(<ProductItem product={product} key={product._id}/>)) }
             </div>
+            {products.length!==0&&<Pagination
+                defaultCurrent={current}
+                total={totalItems}
+                pageSize={pageSize}
+                defaultPageSize={pageSize}
+                onChange={(page, pageSize) => {
+                setCurrent(page);
+                }}
+            />}</>}
+
     </LayoutComponent>
   )
 }
