@@ -35,7 +35,7 @@ const columns=[
 ]
 const ProductReviews = ({productId}) => {
     const [reviews, setReviews] = useState([])
-    console.log(reviews)
+    // console.log(reviews)
     useEffect(() => {
       if(productId!==''){
         getProductById(productId).then(res=>{

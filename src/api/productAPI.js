@@ -60,7 +60,7 @@ export const getAllProductsByDiscount = async (
     }${
       rangePrice &&
       `&price[gte]=${rangePrice[0] || 0}&price[lte]=${rangePrice[1] || 2000000}`
-    }`
+    }&discount[gt]=0`
   );
   return res.data;
 };

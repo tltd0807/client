@@ -12,6 +12,7 @@ const ProductDetail = () => {
   const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(true)
   const [quantity, setQuantity] = useState(1)
+  const [checking, setChecking] = useState(false)
   const cartCtx= useContext(CartCtx)
   const [currentProduct, setCurrentProduct] = useState({
     discount:0,
@@ -69,7 +70,7 @@ const ProductDetail = () => {
     setQuantity(value);
   };
   const addToCartHandler=async(currentProduct, size, quantity)=>{
-
+    setChecking(true)
     const existItem=cartCtx.cartItems.find(item=>item.productId===currentProduct._id&&item.size===size);
     const newQuantity= existItem ? existItem.quantity + quantity : 1;
     getProductById(currentProduct._id).then(res=>{
@@ -80,6 +81,7 @@ const ProductDetail = () => {
         openNotificationWithIcon('error',"Sản phẩm hết hàng","Vui lòng loại bỏ khỏi giỏ hàng")
         return;
       }
+      setChecking(false)
       cartCtx.addToCart({
         size,
         quantity:newQuantity,
@@ -145,6 +147,7 @@ for(let i=1; i<=20&& i<=currentSize.stock; i++) quantityArray.push(i);
               <div className='flex space-x-3 mb-6'>
                 {products.map(product=>(
                 <div key={product.id} className='w-fit hover:cursor-pointer' onClick={()=>{
+                  if(checking) return
                   setCurrentProduct(product);
                   setQuantity(1);
                   let i=0;
@@ -166,6 +169,7 @@ for(let i=1; i<=20&& i<=currentSize.stock; i++) quantityArray.push(i);
                 {
                   currentProduct.inventory.map(item=>(
                     <div key={item.size} className={`px-5 py-2 border border-1 border-[#000] ${item.stock===0?'hover:cursor-not-allowed bg-[#edf2f4] text-[#d6ccc2]':' hover:cursor-pointer'} ${item.size===currentSize.size?'bg-[#000] text-[#fff]':''}`} onClick={()=>{
+                      if(checking) return;
                       if(item.stock===0||item.size===currentSize.size) return;
                       setCurrentSize(item)
                       setQuantity(1);
@@ -193,7 +197,7 @@ for(let i=1; i<=20&& i<=currentSize.stock; i++) quantityArray.push(i);
 
             <div className='flex = justify-start w-full gap-1 ml-7 mb-6'>
 
-            <Button className='w-[320px] bg-[#caf0f8] text-[#003049] border border-[#48cae4] font-bold' size='large' onClick={()=>addToCartHandler(currentProduct,currentSize.size,quantity)}> Thêm vào giỏ hàng</Button>
+            <Button className='w-[320px] bg-[#caf0f8] text-[#003049] border border-[#48cae4] font-bold' size='large' onClick={()=>addToCartHandler(currentProduct,currentSize.size,quantity)} disabled={checking}> Thêm vào giỏ hàng</Button>
             </div>
             <div className='flex flex-col items-start justify-start w-full gap-1 ml-7  mb-6'>
               <p className='text-[20px]'>Mô tả:</p>

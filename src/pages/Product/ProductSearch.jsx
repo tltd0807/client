@@ -10,6 +10,7 @@ const { Search } = Input;
 const ProductSearch = () => {
     const [products, setProducts] = useState([])
     const navigate= useNavigate();
+    // eslint-disable-next-line no-unused-vars
     const [searchParams, setSearchParams] = useSearchParams();
     const productName=searchParams.get("name")
     const [loading, setLoading] = useState(true)
@@ -25,7 +26,8 @@ useEffect(() => {
     getAllProductsByName(productName.trim(),pageSize,current).then(res=>{
         setProducts(res.data.data)
         // setTotalItems(res.totalPage*pageSize)
-        setTotalItems(res.totalPage===1?res.result:res.totalPage*pageSize)
+        // nếu res.result<pageSize thì (res.totalPage-1)*repageSize+res.result
+        setTotalItems((res.totalPage-1)*pageSize+res.result)
         setLoading(false)
 
     }).catch(err=>{

@@ -158,7 +158,7 @@ const onApprovePayPal=(data, actions) => {
   return actions.order.capture().then((details) => {
       const name = details.payer.name.given_name;
       // console.log(details)
-      openNotificationWithIcon('success',"Đã thanh toán thành công",`Transaction completed by ${name}`)
+      openNotificationWithIcon('success',"Đã thanh toán thành công",`Thanh toán bởi ${name}`)
     setTimeout(()=>{
       createOrderHandler();
     },500)
