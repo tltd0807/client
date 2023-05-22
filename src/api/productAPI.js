@@ -118,9 +118,6 @@ export const getAllProductsByNameAndGender = async (productName, gender) => {
 
 // {{URL}}api/v1/products/:id
 export const getProductById = async (productId) => {
-  const res = await axios.get(
-    // `${APP_BASE_URL}/api/v1/products?fields=name,price,discount,imageCover,color,gender`
-    `${APP_BASE_URL}/api/v1/products/${productId}`
-  );
+  const res = await axios.get(`${APP_BASE_URL}/api/v1/products/${productId}`);
   return res.data;
 };
