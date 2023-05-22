@@ -251,7 +251,9 @@ const columns = [
       {
         title: "Số lượng trong kho",
         dataIndex: "stock",
-        width: 100
+        width: 100,
+        defaultSortOrder: 'ascend',
+        sorter: (a, b) => a.stock - b.stock,
       },
       {
         title: "Đã bán ",

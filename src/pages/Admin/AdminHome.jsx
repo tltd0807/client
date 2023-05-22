@@ -26,7 +26,7 @@ function getItem(label, key, icon, children, type) {
 
 
  const  AdminHome = () => {
-const [currentKey, setCurrentKey] = useState("2")
+const [currentKey, setCurrentKey] = useState("1")
   function onClickItem({  key }){
     setCurrentKey(key)
   }
