@@ -1,11 +1,12 @@
 import React, { useState } from 'react'
 import LayoutComponent from '../../layout/Layout'
-import { PieChartOutlined,DesktopOutlined,ContainerOutlined,UnorderedListOutlined } from '@ant-design/icons';
+import { PieChartOutlined,DesktopOutlined,ContainerOutlined,UnorderedListOutlined,TagOutlined } from '@ant-design/icons';
 import {  Layout, Menu  } from 'antd';
 import StatisticApp from './StatisticApp';
 import AccountManagement from './AccountManagement';
 import OrderManagement from './OrderManagement';
 import ProductManagement from './ProductManagement';
+import VoucherManagement from './VoucherManagement';
 
 const {  Sider } = Layout;
 function getItem(label, key, icon, children, type) {
@@ -21,6 +22,7 @@ function getItem(label, key, icon, children, type) {
   getItem('Người dùng', '2', <DesktopOutlined />),
   getItem('Sản phẩm', '3', <ContainerOutlined />),
   getItem('Đơn hàng', '4', <UnorderedListOutlined />),
+  getItem('Mã giảm giá', '5', <TagOutlined />),
   
 ];
 
@@ -48,6 +50,7 @@ const [currentKey, setCurrentKey] = useState("1")
        {currentKey==='2'&&<AccountManagement/>}
        {currentKey==='3'&&<ProductManagement/>}
        {currentKey==='4'&&<OrderManagement/>}
+       {currentKey==='5'&&<VoucherManagement/>}
        </section>
    
 

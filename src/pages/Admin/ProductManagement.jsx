@@ -3,9 +3,7 @@ import CreateProduct from '../Product/CreateProduct';
 import ProductTable from '../Product/ProductTable/ProductTable';
 
 const ProductManagement = () => {
-const [reload, setReload] = useState(false)
-
-
+  const [reload, setReload] = useState(false)
   return (
     <section>
       <div className='py-6'>

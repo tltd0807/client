@@ -97,7 +97,6 @@ const onChangeRadioHandler = (e) => {
 const createOrderHandler=()=>{
   setLoading(true)
   const orderItems=cartCtx.cartItems.map(item=>{return{
-    // "color": "Xanh Nhớt",
     "product":item.productId,
     "price":item.price*(1-item.discount/100),
     "size":item.size,
@@ -139,7 +138,6 @@ const createOrderHandler=()=>{
       console.log(err.response.data.message);
       openNotificationWithIcon('error',"Tạo đơn hàng thất bại",err.response.data.message)
       setLoading(false);
-  
   })
 
 }

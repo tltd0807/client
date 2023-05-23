@@ -84,8 +84,8 @@ const StatisticApp = () => {
           
       </Row>
       <Row gutter={[16,16]} justify='center'>
-        {ordersStats.orderStats&&ordersStats.orderStats.map(item=>(
-                <Col span={4}>
+        {ordersStats.orderStats&&ordersStats.orderStats.map((item,i)=>(
+                <Col span={4} key={i}>
                   <Card bordered={false}>
                     <Statistic
                       title={`Số đơn hàng ${item.status==="new"?'Chờ duyệt':item.status==="processing"?'Đang xử lý':item.status==="done"?'Hoàn thành':'Đã hủy'}`}
@@ -130,7 +130,7 @@ const StatisticApp = () => {
               ></Chart>}
       </div>
       </>}
-      {bestSeller.length!==0&&<div>
+      {bestSeller.length!==0&&<div className='pb-4'>
         <h3 className='text-center py-2 font-bold text-[20px]'>Top 5 sản phẩm bán chạy nhất</h3>
         <Table columns={columns} dataSource={bestSeller} pagination={false}/>
         </div>}

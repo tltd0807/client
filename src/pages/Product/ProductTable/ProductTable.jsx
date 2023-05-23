@@ -23,7 +23,7 @@ const error = (mes) => {
 };
 //   Thiếu category trong table
 const ProductTable = (props) => {
-  const authCtx= useContext(AuthContext)
+const authCtx= useContext(AuthContext)
 const [data, setData] = useState([])
 const [category, setCategory] = useState([])
 const [productUpdate, setProductUpdate] = useState()
@@ -200,7 +200,7 @@ useEffect(() => {
       cancelText: 'Hủy',
       onOk() {
    deleteProduct(authCtx.token,product.id).then(res=>{
-    console.log(res)
+    // console.log(res)
     setReload(old=>!old)
     success("Đã xóa thành công")
    }).catch(err=>{
