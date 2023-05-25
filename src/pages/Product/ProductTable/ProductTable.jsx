@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useContext, useRef} from 'react'
-import { Button, Image, Input, Modal, Space, Table } from "antd";
+import { Button, Image, Input, Modal, Space, Table, Tag } from "antd";
 import { SearchOutlined,ExclamationCircleFilled } from '@ant-design/icons';
 import { deleteProduct, getAllCategory, getAllProductAdmin,  updateProduct } from '../../../api/productAPI';
 import UpdateProductForm from '../ProductForm/UpdateProductForm';
@@ -219,7 +219,6 @@ const columns = [
     title: "Mã sản phẩm",
     dataIndex: "customeId",
     key: "customeId",
-  //   width: 120,
     fixed: "left",
     ...getColumnSearchProps('customeId'),
   },
@@ -228,14 +227,12 @@ const columns = [
     title: "Tên sản phẩm",
     dataIndex: "name",
     key: "name",
-  //   width: 180,
     ...getColumnSearchProps('name'),
   },
   {
       title: "Loại sản phẩm",
       dataIndex: "category",
       key: "category",
-      // width: 120
       filters:categoryOpt,
       onFilter: (value, record) => record.categoryId.indexOf(value) === 0
     },
@@ -246,7 +243,6 @@ const columns = [
         title: "Size",
         dataIndex: "size",
         key: "size",
-      //   width: 50
       },
       {
         title: "Số lượng trong kho",
@@ -258,8 +254,6 @@ const columns = [
       {
         title: "Đã bán ",
         dataIndex: "soldAmount",
-      //   width: 50
-
       }
     ]
   },
@@ -267,26 +261,22 @@ const columns = [
     title: "Giá",
     dataIndex: "price",
     key: "price",
-  //   width: 80,
   },
   {
     title: "Giảm giá %",
     dataIndex: "discount",
     key: "discount",
-  //   width: 89,
   },
   {
     title: "Màu",
     dataIndex: "color",
     key: "color"
-    // width: 80,
   },
   {
     title: "Giới tính",
     dataIndex: "gender",
     key: "gender",
-  //   width: 80,
-  //   fixed: "right"
+
       filters: [
       {
         text: 'Nam',
@@ -304,6 +294,25 @@ const columns = [
     onFilter: (value, record) => record.gender.indexOf(value) === 0,
     render: (text) => <p>{`${text==='male'?"Nam":text==='female'?"Nữ":"Khác"}`}</p>,
   },
+  {
+    title: "Trạng thái",
+    dataIndex: "isShow",
+    key: "isShow",
+      filters: [
+      {
+        text: 'Đang hiển thị',
+        value: true,
+      },
+      {
+        text: 'Đã ẩn',
+        value: false,
+      },
+    ],
+    onFilter: (value, record) => record.isShow===value,
+    render: (_,record) =>record.isShow?<Tag color="success">Đang hiển thị</Tag>:<Tag color="error">Đã ẩn</Tag>
+    
+  },
+  
   {
     title: "Cập nhật",
     key: "update",
@@ -339,7 +348,7 @@ const columns = [
 ];
     // key= customeId+ size
     useEffect(() => {
-      getAllProductAdmin().then(res=>{
+      getAllProductAdmin(authCtx.token).then(res=>{
             // console.log(res.data.data)
             const processedData=[]
             res.data.data.forEach(product => {
@@ -360,7 +369,8 @@ const columns = [
                         category:product.category.name,
                         categoryId: product.category.id,
                         imageCover: product.imageCover,
-                        images:product.images
+                        images:product.images,
+                        isShow:product.isShow
                     })
                 })
             });

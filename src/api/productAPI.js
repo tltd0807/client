@@ -19,8 +19,10 @@ export const getAllProducts = async (
   return res.data;
 };
 
-export const getAllProductAdmin = async () => {
-  const res = await axios.get(`${APP_BASE_URL}/api/v1/products`);
+export const getAllProductAdmin = async (token) => {
+  const res = await axios.get(`${APP_BASE_URL}/api/v1/products/admin`, {
+    headers: { Authorization: `${token}` },
+  });
   return res.data;
 };
 

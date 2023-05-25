@@ -40,7 +40,7 @@ const ProductDetail = () => {
       description:description,
     });
   };
-
+// console.log(currentProduct)
   useEffect(() => {
     getProductById(productId).then(res=>{
       // console.log(res.data.data)
@@ -142,7 +142,8 @@ for(let i=1; i<=20&& i<=currentSize.stock; i++) quantityArray.push(i);
             </div>
             
             <div className='flex flex-col items-start justify-start w-full gap-1 ml-7 text-[20px]'>
-              <p>Tình trạng: {currentSize.stock===0?<span className='text-[#f50] font-bold'>Hết hàng</span>:<span className='text-[#0077b6] font-bold'>Còn hàng ({currentSize.stock})</span>}</p>
+            {!currentProduct.isShow?<p className='text-[#f50] font-bold'>Sản phẩm đã dừng kinh doanh</p>:<p>Tình trạng: {currentSize.stock===0?<span className='text-[#f50] font-bold'>Hết hàng</span>:<span className='text-[#0077b6] font-bold'>Còn hàng ({currentSize.stock})</span>}</p>}
+              
 
               <div className='flex space-x-3 mb-6'>
                 {products.map(product=>(
@@ -162,9 +163,8 @@ for(let i=1; i<=20&& i<=currentSize.stock; i++) quantityArray.push(i);
                 }}>
                   <Image width={100} src={product.imageCover} preview={false}/>
                 </div>))}
-
               </div>
-              <p>Kích thước:</p>
+              {currentProduct.isShow&&<><p>Kích thước:</p>
               <div className='flex max-w-[320px] flex-wrap mb-6'>
                 {
                   currentProduct.inventory.map(item=>(
@@ -176,9 +176,11 @@ for(let i=1; i<=20&& i<=currentSize.stock; i++) quantityArray.push(i);
                     }}>{item.size}</div>
                   ))
                 }
-              </div>
+              </div></>}
+              
+
             </div>
-            <div className='flex flex-col items-start justify-start w-full gap-1 ml-7 text-[20px] mb-6'>
+            {currentProduct.isShow&&<><div className='flex flex-col items-start justify-start w-full gap-1 ml-7 text-[20px] mb-6'>
             <p>Số lượng:</p>
               <Select
                 defaultValue={1}
@@ -193,11 +195,12 @@ for(let i=1; i<=20&& i<=currentSize.stock; i++) quantityArray.push(i);
                 {quantityArray.map(i=>(<Select.Option key={i} value={i}>{`${i} đôi`}</Select.Option>))}
             
               </Select>
-            </div>
+            </div></>}
+            
 
             <div className='flex = justify-start w-full gap-1 ml-7 mb-6'>
 
-            <Button className='w-[320px] bg-[#caf0f8] text-[#003049] border border-[#48cae4] font-bold' size='large' onClick={()=>addToCartHandler(currentProduct,currentSize.size,quantity)} disabled={checking}> Thêm vào giỏ hàng</Button>
+            <Button className='w-[320px] bg-[#caf0f8] text-[#003049] border border-[#48cae4] font-bold' size='large' onClick={()=>addToCartHandler(currentProduct,currentSize.size,quantity)} disabled={checking||!currentProduct.isShow}> Thêm vào giỏ hàng</Button>
             </div>
             <div className='flex flex-col items-start justify-start w-full gap-1 ml-7  mb-6'>
               <p className='text-[20px]'>Mô tả:</p>
