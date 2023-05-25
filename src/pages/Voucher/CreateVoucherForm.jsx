@@ -1,9 +1,8 @@
 import { DatePicker, Form, Input, InputNumber, Modal } from 'antd';
-import React,{ useState } from 'react'
+import React from 'react'
 
 const CreateVoucherForm = ({ open, onCreate, onCancel }) => {
     const [form] = Form.useForm();
-    const [loading, setLoading] = useState(false);
 
   return (
     <Modal

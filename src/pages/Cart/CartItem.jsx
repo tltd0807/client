@@ -27,6 +27,7 @@ const CartItem = ({product,setNOfNotValid,nOfNotValid}) => {
                 setNOfNotValid(newArray)
         }
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isEnoughStock])
     
 useEffect(() => {
@@ -36,6 +37,7 @@ useEffect(() => {
         setIsEnoughStock(res.data.data.inventory.find(inventory=>inventory.size===size).stock>=itemQuantity);
        
     }).catch(err=>console.log(err))
+// eslint-disable-next-line react-hooks/exhaustive-deps
 }, [itemQuantity])
 
 for(let i=1; i<=20&& i<=productInventory.stock; i++) quantityArray.push(i);

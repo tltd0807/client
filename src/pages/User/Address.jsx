@@ -25,6 +25,7 @@ const Address = () => {
   const authCtx= useContext(AuthContext)
   const [reload, setReload] = useState(true)
   const { confirm } = Modal;
+// eslint-disable-next-line no-unused-vars
 const [userInfo, setUserInfo] = useState({
   firstName: authCtx.firstName,
   lastName: authCtx.lastName,
@@ -64,6 +65,7 @@ useEffect(() => {
     setAddressArr(res.data.data.addresses)
     // console.log(res.data.data)
   })
+// eslint-disable-next-line react-hooks/exhaustive-deps
 }, [reload])
 
   return (

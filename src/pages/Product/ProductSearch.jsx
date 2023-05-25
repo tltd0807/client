@@ -54,7 +54,7 @@ useEffect(() => {
             </div>
             
             </div>)}
-            {productName&&<p className='text-[24px]'>Có <span className='font-bold'>{totalItems}</span>  sản phẩm</p>}
+            {productName&&<p className='text-[24px]'>Có <span className='font-bold'>{products.length!==0?totalItems:0}</span>  sản phẩm</p>}
             <div className='flex flex-wrap justify-center max-w-[100%] gap-4 gap-y-10 mt-10'>
                 {products.length!==0&&products.map(product=>(<ProductItem product={product} key={product._id}/>)) }
             </div>

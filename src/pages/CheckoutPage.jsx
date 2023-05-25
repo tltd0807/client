@@ -57,7 +57,11 @@ const { confirm } = Modal;
       setVouchers(res.data.data)
     }).catch(err=>console.log(err))
     getCurrentUser(authCtx.token).then(res=>{
-    setAddressArr(res.data.data.addresses)
+      if(res.data.data.addresses.length===0){
+      setAddressArr([{city:''}])
+      }else{
+        setAddressArr(res.data.data.addresses)
+      }
   })
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [reload])
@@ -131,7 +135,7 @@ const createOrderHandler=()=>{
       cartCtx.clearCart();
       setTimeout(()=>{
         navigate(`/order/${res.data.data._id}`)
-      },500)
+      },700)
   
   setLoading(false)
     }).catch(err=>{
@@ -177,7 +181,7 @@ const onError=(err)=>{
                 <h2  className='text-[24px] bg-[#f5f5f5] px-2  py-2 uppercase'> Thông tin giao hàng</h2>
                 <AddressForm setReload={setReload}/>
                 <div className='grid grid-cols-2 gap-2 '>
-                      {addressArr.length>0&&addressArr.map((item, index)=>(<div key={item._id} className={`hover:cursor-pointer w-fit rounded-[10px] ${indexArrItem===index?'border-2 border-[#74acfbf3]':''}`} onClick={()=>setIndexArrItem(index)}><AddressItem key={item._id} removeAddress={removeAddress} className={`w-[350px]`}  item={item} setReload={setReload}/></div>))}
+                      {addressArr[0].city!==''&&addressArr.map((item, index)=>(<div key={item._id} className={`hover:cursor-pointer w-fit rounded-[10px] ${indexArrItem===index?'border-2 border-[#74acfbf3]':''}`} onClick={()=>setIndexArrItem(index)}><AddressItem key={item._id} removeAddress={removeAddress} className={`w-[350px]`}  item={item} setReload={setReload}/></div>))}
                 </div>
               </div>
               <div>
@@ -267,10 +271,13 @@ const onError=(err)=>{
                   <p className='text-[#ff006e]'>{(cartCtx.cartItems.reduce((total, item)=>total+Math.round((item.price*(1-item.discount/100)/1000)*1000*item.quantity),0)-appliedVoucer.discount+(addressArr[indexArrItem].city==="Thành phố Hồ Chí Minh"?20000:40000)).toLocaleString('vi', {style : 'currency', currency : 'VND'})}</p>
                 </div>
               </div>
-              {paymentMethod==="COD"?<Button className=' bg-[#caf0f8] text-[#003049] border border-[#48cae4] uppercase font-bold w-full' size='large'  onClick={createOrderHandler}>Hoàn tất đơn hàng</Button>
+              <div>
+                {addressArr[0].city===''?<p>Vui lòng thêm địa chỉ</p>:              paymentMethod==="COD"?<Button className=' bg-[#caf0f8] text-[#003049] border border-[#48cae4] uppercase font-bold w-full' size='large'  onClick={createOrderHandler}>Hoàn tất đơn hàng</Button>
               :<PayPalButtons createOrder={createOrderPayPal}
               onApprove={onApprovePayPal}
               onError={onError} style={{ layout: "horizontal" }} />}
+              </div>
+
 
             </section>
         </main>}

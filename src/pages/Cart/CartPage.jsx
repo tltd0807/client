@@ -9,10 +9,8 @@ import AuthContext from '../../store/authCtx'
 const CartPage = () => {
     const cartCtx = useContext(CartCtx)
     const authCtx = useContext(AuthContext);
-    // console.log()
     const navigate=useNavigate();
     const [nOfNotValid, setNOfNotValid] = useState([])
-    // console.log('nOfNotValid: ',nOfNotValid)
   return (
     <LayoutComponent>
         <main className='flex justify-center space-x-3'>

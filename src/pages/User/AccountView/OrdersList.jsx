@@ -15,6 +15,7 @@ const OrdersList = () => {
         orderItems:[{price:0, product:{discount:0}, quantity:0}],
         orderStatus:''
     }])
+    // eslint-disable-next-line no-unused-vars
     const [userInfo, setUserInfo] = useState({
         firstName: authCtx.firstName,
         lastName: authCtx.lastName,
@@ -31,6 +32,7 @@ const OrdersList = () => {
         }).catch(err=>{
             console.log(err.response.data.message)
         })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
     const dataSource =[];
     orders.sort((a,b)=>a.createdAt>b.createdAt?-1:0).forEach((item, index)=>{

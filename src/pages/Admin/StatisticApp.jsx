@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { Chart } from "react-google-charts";
 import { getBestSeller, getOrderStats, getProductStats } from '../../api/staticsAPI';
-import { ArrowDownOutlined, ArrowUpOutlined,UserOutlined } from '@ant-design/icons';
 import AuthContext from '../../store/authCtx';
 import { Card, Col, Row, Statistic, Table } from 'antd';
 const columns=[
