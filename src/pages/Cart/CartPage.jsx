@@ -28,7 +28,7 @@ const CartPage = () => {
             <p className='text-[20px] font-medium'>Tạm tính</p>
             <p className='text-[20px] font-medium text-[#ff006e]'>{cartCtx.cartItems.reduce((total, item)=>total+Math.round((item.price*(1-item.discount/100)/1000)*1000*item.quantity),0).toLocaleString('vi', {style : 'currency', currency : 'VND'})}</p>
           </div>
-          {authCtx.isLoggedIn?<Button className=' bg-[#caf0f8] text-[#003049] border border-[#48cae4] font-bold w-full' size='large' disabled={nOfNotValid.length!==0} onClick={()=>{navigate('/checkout')}}> Đặt hàng</Button>:<Button className=' bg-[#caf0f8] text-[#003049] border border-[#48cae4] font-bold w-full' size='large' disabled={nOfNotValid.length!==0} onClick={()=>{navigate('/login',{ state: { previousPage:'/cart'} })}}> Đăng nhập</Button>}
+          {authCtx.isLoggedIn?<Button  className=' bg-[#caf0f8] text-[#003049] border border-[#48cae4] font-bold w-full' size='large' disabled={nOfNotValid.length!==0||cartCtx.cartItems.reduce((total, item)=>total+item.quantity,0)===0} onClick={()=>{navigate('/checkout')}}> Đặt hàng</Button>:<Button className=' bg-[#caf0f8] text-[#003049] border border-[#48cae4] font-bold w-full' size='large' disabled={nOfNotValid.length!==0} onClick={()=>{navigate('/login',{ state: { previousPage:'/cart'} })}}> Đăng nhập</Button>}
           
           </section>
 

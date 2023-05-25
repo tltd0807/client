@@ -119,7 +119,7 @@ const createOrderHandler=()=>{
         updateTime: new Date(Date.now())
       }}
     :{
-      orderItems:cartCtx.cartItems,
+      orderItems:orderItems,
       voucher:appliedVoucer._id,
       shippingPrice:(addressArr[indexArrItem].city==="Thành phố Hồ Chí Minh"?20000:40000),
       address:addressArr[indexArrItem],
