@@ -82,6 +82,7 @@ const ProductDetail = () => {
         return;
       }
       setChecking(false)
+  
       cartCtx.addToCart({
         size,
         quantity:newQuantity,
@@ -90,7 +91,8 @@ const ProductDetail = () => {
         coverImage:currentProduct.imageCover, productName:currentProduct.name, discount:currentProduct.discount,
         gender:currentProduct.gender,
         customeId:currentProduct.customeId,
-        color:currentProduct.color})
+        color:currentProduct.color,
+        isShow:currentProduct.isShow})
     }).catch(err=>{console.log(err)})
 
   }

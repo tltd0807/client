@@ -193,16 +193,16 @@ useEffect(() => {
   }
   const showDeleteConfirm = (product) => {
     return confirm({
-      title: `Bạn chắn chắn xóa ${product.name} với mã sản phẩm  ${product.customeId}?`,
+      title: `Bạn chắn chắn ẩn ${product.name} với mã sản phẩm  ${product.customeId}?`,
       icon: <ExclamationCircleFilled />,
-      okText: 'Xóa',
+      okText: 'Ẩn',
       okType: 'danger',
       cancelText: 'Hủy',
       onOk() {
    deleteProduct(authCtx.token,product.id).then(res=>{
     // console.log(res)
     setReload(old=>!old)
-    success("Đã xóa thành công")
+    success("Đã ẩn thành công")
    }).catch(err=>{
     console.log(err)
     error(err.response.data.message)
@@ -332,7 +332,7 @@ const columns = [
     ),
   },
   {
-    title: "Xóa sản phẩm",
+    title: "Ẩn sản phẩm",
     key: "delete",
     render: (_, record) => (
       <Space size="middle">
@@ -340,7 +340,7 @@ const columns = [
         danger
         onClick={()=>showDeleteConfirm(record)}
     >
-      Xóa sản phẩm
+      Ẩn sản phẩm
     </Button>
       </Space>
     ),
@@ -381,6 +381,7 @@ const columns = [
             console.log(err)
         })
     
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [reload,props.reload])
     
   return (
