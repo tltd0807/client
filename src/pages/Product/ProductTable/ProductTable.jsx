@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useContext, useRef} from 'react'
-import { Button, Image, Input, Modal, Space, Table, Tag } from "antd";
+import { Button, Image, Input, Modal, Space,  Table, Tag } from "antd";
 import { SearchOutlined,ExclamationCircleFilled } from '@ant-design/icons';
 import { deleteProduct, getAllCategory, getAllProductAdmin,  updateProduct } from '../../../api/productAPI';
 import UpdateProductForm from '../ProductForm/UpdateProductForm';
@@ -193,16 +193,16 @@ useEffect(() => {
   }
   const showDeleteConfirm = (product) => {
     return confirm({
-      title: `Bạn chắn chắn ẩn ${product.name} với mã sản phẩm  ${product.customeId}?`,
+      title: `Bạn chắn chắn ${product.isShow?'ẩn':'hiển thị'} ${product.name} với mã sản phẩm  ${product.customeId}?`,
       icon: <ExclamationCircleFilled />,
-      okText: 'Ẩn',
+      okText: `${product.isShow?'Ẩn':'Hiển thị'}`,
       okType: 'danger',
       cancelText: 'Hủy',
       onOk() {
-   deleteProduct(authCtx.token,product.id).then(res=>{
+   deleteProduct(authCtx.token,{isShow:!product.isShow},product.id).then(res=>{
     // console.log(res)
     setReload(old=>!old)
-    success("Đã ẩn thành công")
+    success("Cập nhật thành công")
    }).catch(err=>{
     console.log(err)
     error(err.response.data.message)
@@ -332,7 +332,7 @@ const columns = [
     ),
   },
   {
-    title: "Ẩn sản phẩm",
+    title: "Cập nhật trạng thái sản phẩm",
     key: "delete",
     render: (_, record) => (
       <Space size="middle">
@@ -340,8 +340,9 @@ const columns = [
         danger
         onClick={()=>showDeleteConfirm(record)}
     >
-      Ẩn sản phẩm
+      Cập nhật
     </Button>
+
       </Space>
     ),
   }

@@ -91,9 +91,10 @@ export const updateProduct = async (token, data, productId) => {
   return res.data;
 };
 
-export const deleteProduct = async (token, productId) => {
-  const res = await axios.delete(
-    `${APP_BASE_URL}/api/v1/products/${productId}`,
+export const deleteProduct = async (token, data, productId) => {
+  const res = await axios.patch(
+    `${APP_BASE_URL}/api/v1/products/isShow/${productId}`,
+    data,
     {
       headers: { Authorization: `${token}` },
     }
@@ -101,11 +102,20 @@ export const deleteProduct = async (token, productId) => {
   return res.data;
 };
 
-export const getAllProductsByName = async (productName, limit, page) => {
+export const getAllProductsByName = async (
+  productName,
+  limit,
+  page,
+  sortBy,
+  rangePrice
+) => {
   const res = await axios.get(
     `${APP_BASE_URL}/api/v1/products?name=${productName}&limit=${
       limit || 10000
-    }&page=${page || 1}`
+    }&page=${page || 1}&sort=${sortBy || "createAt"}${
+      rangePrice &&
+      `&price[gte]=${rangePrice[0] || 0}&price[lte]=${rangePrice[1] || 2000000}`
+    }`
   );
   return res.data;
 };

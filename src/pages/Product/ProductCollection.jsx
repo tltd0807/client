@@ -74,7 +74,7 @@ const ProductCollection = () => {
     const onAfterChange = (value) => {
         setRangePrice(value)
       };
-      const content = (
+    const content = (
         <div>
             <p className='hover:cursor-pointer hover:text-[#48cae4]' onClick={()=>setSortBy('price')}>Giá tăng dần</p>
             <p className='hover:cursor-pointer hover:text-[#48cae4]' onClick={()=>setSortBy('-price')}>Giá giảm dần</p>

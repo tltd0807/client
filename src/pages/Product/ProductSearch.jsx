@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import LayoutComponent from '../../layout/Layout';
-import {  Input, Pagination, Spin } from 'antd';
+import {  Input, Pagination, Popover, Slider, Spin } from 'antd';
 import ProductItem from './ProductItem';
 import { getAllProductsByName } from '../../api/productAPI';
 import { pageSize } from '../../configs/constants';
 const { Search } = Input;
-
+const formatter = (value) => value.toLocaleString('vi', {style : 'currency', currency : 'VND'});
 const ProductSearch = () => {
     const [products, setProducts] = useState([])
     const navigate= useNavigate();
@@ -16,6 +16,9 @@ const ProductSearch = () => {
     const [loading, setLoading] = useState(true)
     const [totalItems, setTotalItems] = useState(0);
     const [current, setCurrent] = useState(1);
+    const [sortBy, setSortBy] = useState('createAt')
+    const [rangePrice, setRangePrice] = useState([0,2000000])
+
 useEffect(() => {
     setLoading(true)
     if(!productName){
@@ -23,7 +26,7 @@ useEffect(() => {
         setLoading(false)
         return;
     }
-    getAllProductsByName(productName.trim(),pageSize,current).then(res=>{
+    getAllProductsByName(productName.trim(),pageSize,current,sortBy,rangePrice).then(res=>{
         setProducts(res.data.data)
         // setTotalItems(res.totalPage*pageSize)
         // nếu res.result<pageSize thì (res.totalPage-1)*repageSize+res.result
@@ -35,12 +38,42 @@ useEffect(() => {
         setLoading(false)
 
     })
-}, [productName,current])
+// eslint-disable-next-line react-hooks/exhaustive-deps
+}, [productName,current,sortBy,rangePrice[0],rangePrice[1]])
 
+const onAfterChange = (value) => {
+    setRangePrice(value)
+  };
+const content = (
+    <div>
+        <p className='hover:cursor-pointer hover:text-[#48cae4]' onClick={()=>setSortBy('price')}>Giá tăng dần</p>
+        <p className='hover:cursor-pointer hover:text-[#48cae4]' onClick={()=>setSortBy('-price')}>Giá giảm dần</p>
+        <p className='hover:cursor-pointer hover:text-[#48cae4]' onClick={()=>setSortBy('createAt')}>Cũ nhất</p>
+        <p className='hover:cursor-pointer hover:text-[#48cae4]' onClick={()=>setSortBy('-createAt')}>Mới nhất</p>
+    </div>
+  );
   return (
     <LayoutComponent>
-        {loading?<Spin size='large'/>:<>
+
         <h2 className='text-[32px] font-bold my-3 uppercase'>Tìm kiếm </h2>
+        <div className='h-10  mx-[74px] flex justify-between'>
+            <div className='flex'>
+                <div className='min-w-[400px]'>
+                    <p className='font-bold'>Giá từ: {rangePrice[0].toLocaleString('vi', {style : 'currency', currency : 'VND'})} - {rangePrice[1].toLocaleString('vi', {style : 'currency', currency : 'VND'})}</p>
+                    <Slider range defaultValue={[0, 2000000]} max={2000000} step={25000} tooltip={{ formatter }} onAfterChange={onAfterChange} />
+                </div>
+
+            </div>
+            <div >
+            <Popover content={content} title="" trigger="hover" placement="bottomRight">
+                <div className='px-3 py-2 border flex w-[170px] justify-between hover:cursor-pointer'>
+                <p>Sắp xếp theo</p>
+                </div>
+                
+            </Popover>
+            </div>
+        </div>
+        {loading?<Spin size='large'/>:<>
            {products.length===0&&(<div className=' flex flex-col space-y-10 text-[24px] leading-10'>
             <div>
                 <p>Rất tiếc, chúng tôi không tìm thấy kết quả cho từ khóa của bạn</p>
